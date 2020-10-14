@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Bullet
   - Leaf
+  - GameManager
   layers:
   - Default
   - TransparentFX
