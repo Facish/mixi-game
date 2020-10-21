@@ -13,8 +13,8 @@ public class MatchSceneManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         PhotonNetwork.ConnectUsingSettings();    
-        PhotonNetwork.SendRate = 30; // 1秒間にメッセージ送信を行う回数
-        PhotonNetwork.SerializationRate = 30; // 1秒間にオブジェクト同期を行う回数
+        PhotonNetwork.SendRate = 60; // 1秒間にメッセージ送信を行う回数
+        PhotonNetwork.SerializationRate = 60; // 1秒間にオブジェクト同期を行う回数
     }
 
     // マスターサーバーへの接続が成功した時に呼ばれるコールバック

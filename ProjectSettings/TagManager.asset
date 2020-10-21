@@ -7,6 +7,7 @@ TagManager:
   - Bullet
   - Leaf
   - GameManager
+  - Fruit
   layers:
   - Default
   - TransparentFX
@@ -50,11 +51,11 @@ TagManager:
   - name: Leaves
     uniqueID: 3328227689
     locked: 0
-  - name: Objects
-    uniqueID: 1014386375
-    locked: 0
   - name: Player
     uniqueID: 866222301
+    locked: 0
+  - name: Objects
+    uniqueID: 1014386375
     locked: 0
   - name: UI
     uniqueID: 11926159
