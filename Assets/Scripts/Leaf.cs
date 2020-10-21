@@ -37,7 +37,7 @@ public class Leaf : MonoBehaviourPunCallbacks
             growAmount += 1;
             life += 1;
         }
-
+        
         // lifeに応じて葉の色を変更
         if (life < StartLife / 8)
         {
@@ -54,6 +54,9 @@ public class Leaf : MonoBehaviourPunCallbacks
         //        leafchild.GetComponent<SpriteRenderer>().color = Color.yellow;
         //    }
             leafsprite.color = Color.yellow;
+        }
+        else {
+            leafsprite.color = Color.white;
         }
 
         // プレイヤーが乗っている間 or 落下確定時にlifeが減少

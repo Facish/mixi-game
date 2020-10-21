@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class Fruit : MonoBehaviourPunCallbacks
 {
+    GameObject sceneManager;
+    GameSceneManager gameSceneManager;
+
     private bool isAvailable;
 
     private int getScore = 0;
@@ -17,10 +20,18 @@ public class Fruit : MonoBehaviourPunCallbacks
         transform.position = origin;
     }
 
+    public void Start() {
+        sceneManager = GameObject.Find("GameSceneManager");
+        gameSceneManager = sceneManager.GetComponent<GameSceneManager>();
+    }
+
 
     public void TryGetItem(GameObject player) {
+        getScore = 0;
         photonView.RPC(nameof(RPCTryGetItem), RpcTarget.AllViaServer);
         player.GetComponent<GamePlayer>().fruitNum += getScore;
+        gameSceneManager.GetFruits(gameObject);
+        gameSceneManager.getFruitFlag = true;
         this.gameObject.SetActive(false);
     }
 

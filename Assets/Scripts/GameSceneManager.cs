@@ -22,6 +22,9 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     private Fruit fruitPrefab = default;
 
     public List<GameObject> fruits = new List<GameObject>();
+    public List<GameObject> getFruits = new List<GameObject>();
+    public bool getFruitFlag = false; 
+
 
     // Start is called before the first frame update
     void Start()
@@ -64,6 +67,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
+        // 葉が落ちた時のアクティブ化(マスタークライアントで処理)
         if (PhotonNetwork.IsMasterClient && growLeafFlag) {
             foreach(GameObject leaf in leaves) {
                 photonView.RPC(nameof(GrowLeaf), RpcTarget.AllViaServer);
@@ -72,6 +76,15 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         }
         else if (growLeafFlag) {
             growLeafFlag = false;
+        }
+
+        // リンゴの生成
+        if (PhotonNetwork.IsMasterClient && getFruitFlag) {
+            photonView.RPC(nameof(RecycleFruit), RpcTarget.AllViaServer);
+            getFruitFlag = false;
+        }
+        else if (getFruitFlag) {
+            getFruitFlag = false;
         }
     }
 
@@ -95,7 +108,6 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             script.life = script.StartLife/3;
             script.growAmount = script.StartLife/3;
             rb2d.bodyType = RigidbodyType2D.Kinematic;
-            sprite.color = Color.white;
             leaf.gameObject.SetActive(true);
         }
     }
@@ -105,5 +117,20 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         var pos = new Vector3(Random.Range(-6f, 6f), Random.Range(-3f, 3f));
         var fruit = Instantiate(fruitPrefab);
         fruit.Init(pos);
+    }
+
+    [PunRPC]
+    public void GetFruits(GameObject fruit) {
+        fruits.Remove(fruit);
+        getFruits.Add(fruit);
+    }
+
+    [PunRPC]
+    private void RecycleFruit() {
+        foreach(GameObject fruit in getFruits) {
+            var pos = new Vector3(Random.Range(-6f, 6f), Random.Range(-3f, 3f));
+            fruit.gameObject.SetActive(true);
+            fruit.GetComponent<Fruit>().Init(pos);
+        }
     }
 }
