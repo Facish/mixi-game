@@ -134,7 +134,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 629070134}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
   m_Name: 
@@ -152,7 +152,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 394905724}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
   m_Name: 
@@ -403,7 +403,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 2123094011}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
   m_Name: 
@@ -1057,6 +1057,8 @@ MonoBehaviour:
   fruitPrefab: {fileID: 5194205194006035289, guid: a6405546a0c0cd74d8dc9eb331dbd2f8,
     type: 3}
   fruits: []
+  getFruits: []
+  getFruitFlag: 0
 --- !u!4 &1111076208
 Transform:
   m_ObjectHideFlags: 0
@@ -1163,7 +1165,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 1082234747}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
   m_Name: 
@@ -1541,7 +1543,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 902819305}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
   m_Name: 
@@ -1945,6 +1947,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Fruit
+      objectReference: {fileID: 0}
+    - target: {fileID: 262626770202458892, guid: a6405546a0c0cd74d8dc9eb331dbd2f8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6588579066642752546, guid: a6405546a0c0cd74d8dc9eb331dbd2f8,
+        type: 3}
+      propertyPath: viewIdField
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 7663649580215511713, guid: a6405546a0c0cd74d8dc9eb331dbd2f8,
         type: 3}

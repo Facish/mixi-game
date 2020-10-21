@@ -37,7 +37,7 @@ public class Leaf : MonoBehaviourPunCallbacks
             growAmount += 1;
             life += 1;
         }
-
+        
         // lifeに応じて葉の色を変更
         if (life < StartLife / 8)
         {
@@ -55,31 +55,38 @@ public class Leaf : MonoBehaviourPunCallbacks
         //    }
             leafsprite.color = Color.yellow;
         }
+        else {
+            leafsprite.color = Color.white;
+        }
 
         // プレイヤーが乗っている間 or 落下確定時にlifeが減少
-        if (OnPlayer || life < 0)
+        if (OnPlayer || life <= 0)
         {
             life -= lifeDecrease;
+        }
+
+        if (-40 <= life && life <= 0)
+        {
+            //this.transform.localScale = new Vector3(0.5f + life * 0.01f, 0.5f + life * 0.01f, 1);
+            //this.transform.localRotation = Quaternion.Euler(0, 0, life - 45);
+        }
+        if (life == -40)
+        {
+            rigidbody2d.bodyType = RigidbodyType2D.Dynamic;
+        }
+
+        if(this.transform.position.y < -6f)
+        {
+            // 使いまわし & 非アクティブ化
+            gameSceneManager.FallLeaf(gameObject);
+            this.gameObject.SetActive(false);
         }
 
         // マスタークライアントで落下処理
         if (PhotonNetwork.IsMasterClient){
             // プレイヤーが乗っているときlife減少 & 葉が落ちる演出
-            if (-40 <= life && life <= 0)
-            {
-                //this.transform.localScale = new Vector3(0.5f + life * 0.01f, 0.5f + life * 0.01f, 1);
-                this.transform.localRotation = Quaternion.Euler(0, 0, life - 45);
-            }
-            if (life <= -40)
-            {
-                rigidbody2d.bodyType = RigidbodyType2D.Dynamic;
-            }
-            if(this.transform.position.y < -6f)
-            {
-                // 使いまわし & 非アクティブ化
-                gameSceneManager.FallLeaf(gameObject);
-                this.gameObject.SetActive(false);
-            }
+            
+            
         }
     }
 
@@ -97,4 +104,6 @@ public class Leaf : MonoBehaviourPunCallbacks
     {
         OnPlayer = false;
     }
+
+
 }

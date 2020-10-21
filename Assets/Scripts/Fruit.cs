@@ -1,10 +1,14 @@
 ﻿using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Fruit : MonoBehaviourPunCallbacks
 {
+    GameObject sceneManager;
+    GameSceneManager gameSceneManager;
+
     private bool isAvailable;
 
     private int getScore = 0;
@@ -17,14 +21,20 @@ public class Fruit : MonoBehaviourPunCallbacks
         transform.position = origin;
     }
 
-
-    public void TryGetItem(GameObject player) {
-        photonView.RPC(nameof(RPCTryGetItem), RpcTarget.AllViaServer);
-        player.GetComponent<GamePlayer>().fruitNum += getScore;
-        this.gameObject.SetActive(false);
+    public void Start() {
+        sceneManager = GameObject.Find("GameSceneManager");
+        gameSceneManager = sceneManager.GetComponent<GameSceneManager>();
     }
 
-    [PunRPC]
+
+    public void TryGetItem(GameObject player) {
+        getScore = 0;
+        photonView.RPC(nameof(RPCTryGetItem), RpcTarget.AllViaServer);
+        player.GetComponent<GamePlayer>().fruitNum += getScore;//getScore;
+    }
+
+
+    [PunRPC]    
     private void RPCTryGetItem(PhotonMessageInfo info) {
         if (isAvailable) {
             isAvailable = false;
@@ -38,4 +48,16 @@ public class Fruit : MonoBehaviourPunCallbacks
             }
         }
     }
+
+    public void DeleteFruit() {
+        photonView.RPC(nameof(RPCDeleteFruit), RpcTarget.All);
+    }
+
+    [PunRPC]
+    private void RPCDeleteFruit() {
+        gameSceneManager.GetFruits(this.gameObject);
+        gameSceneManager.getFruitFlag = true;
+        this.gameObject.SetActive(false);
+    }
+
 }
