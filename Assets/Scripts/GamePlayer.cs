@@ -59,8 +59,11 @@ public class GamePlayer : MonoBehaviourPunCallbacks
 
 
     private void OnTriggerEnter2D(Collider2D other) {
+        Debug.Log("Trigger");
         if (other.gameObject.tag == "Fruit") {
-            other.gameObject.SetActive(false);
+            var script = other.gameObject.GetComponent<Fruit>();
+            script.TryGetItem(gameObject);
+            script.DeleteFruit();
             //var script = other.gameObject.GetComponent<Fruit>();
             //script.TryGetItem(gameObject);
         }
@@ -77,7 +80,7 @@ public class GamePlayer : MonoBehaviourPunCallbacks
                 }
                 //クリック中
                 if (Input.GetMouseButton(0)) {
-                    Debug.Log(Input.mousePosition.x);
+                    //Debug.Log(Input.mousePosition.x);
 
                     // 画面右クリック
                     if (Input.mousePosition.x > Screen.width/2) {
@@ -100,10 +103,5 @@ public class GamePlayer : MonoBehaviourPunCallbacks
                     jumpPower = FirstJumpPower;
                 }
             }
-    }
-
-    [PunRPC]
-    private void HitByFruit() {
-        
     }
 }

@@ -59,8 +59,12 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 
         if (playerId == 1) {
             for (int i = 0; i < 10; i++) {
-                photonView.RPC(nameof(CreateFruit), RpcTarget.All);
+                photonView.RPC(nameof(CreateFruit), RpcTarget.AllViaServer);
             }
+        }
+        array = GameObject.FindGameObjectsWithTag("Fruit");
+        for (int i = 0; i < array.Length; i++) {
+            fruits.Add(array[i]);
         }
     }
 
@@ -115,8 +119,8 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void CreateFruit() {
         var pos = new Vector3(Random.Range(-6f, 6f), Random.Range(-3f, 3f));
-        var fruit = Instantiate(fruitPrefab);
-        fruit.Init(pos);
+        var fruit = PhotonNetwork.Instantiate("Fruit", pos, Quaternion.identity);
+        //fruit.Init(pos);
     }
 
     [PunRPC]
@@ -132,5 +136,6 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             fruit.gameObject.SetActive(true);
             fruit.GetComponent<Fruit>().Init(pos);
         }
+        getFruits.Clear();
     }
 }
