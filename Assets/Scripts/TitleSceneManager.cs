@@ -28,6 +28,13 @@ public class TitleSceneManager : MonoBehaviour
         }
         else {
             // 実機で実行
+            if (Input.GetMouseButtonDown(0)) {
+                // イベントに登録
+                SceneManager.sceneLoaded += MatchSceneLoaded;
+
+                // シーン切り替え
+                SceneManager.LoadScene("MatchScene");
+            }
         }
     }
 
