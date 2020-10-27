@@ -6,6 +6,7 @@ using UnityEngine;
 public class Leaf : MonoBehaviourPunCallbacks
 {
     public int life;
+    public Color color = new Color(0, 0, 0);
     public int StartLife = 2000;
     public int growAmount = 2000;
     public Vector3 growPos;
@@ -38,55 +39,58 @@ public class Leaf : MonoBehaviourPunCallbacks
             life += 1;
         }
         
-        // lifeに応じて葉の色を変更
-        if (life < StartLife / 8)
-        {
-        //    foreach(Transform leafchild in gameObject.transform)
-        //    {
-        //        leafchild.GetComponent<SpriteRenderer>().color = Color.red;
-        //    }
-            leafsprite.color = Color.red;
-        }
-        else if (life < StartLife / 3)
-        {
-        //    foreach(Transform leafchild in gameObject.transform)
-        //    {
-        //        leafchild.GetComponent<SpriteRenderer>().color = Color.yellow;
-        //    }
-            leafsprite.color = Color.yellow;
-        }
-        else {
-            leafsprite.color = Color.white;
-        }
+        if (PhotonNetwork.IsMasterClient) {
+            // lifeに応じて葉の色を変更
+            if (life > 0) {
+                if (life < StartLife / 8)
+                {
+                //    foreach(Transform leafchild in gameObject.transform)
+                //    {
+                //        leafchild.GetComponent<SpriteRenderer>().color = Color.red;
+                //    }
+                    color = Color.red;
+                    ChangeColor(color);
+                }
+                else if (life < StartLife / 3)
+                {
+                //    foreach(Transform leafchild in gameObject.transform)
+                //    {
+                //        leafchild.GetComponent<SpriteRenderer>().color = Color.yellow;
+                //    }
+                    color = Color.yellow;
+                    ChangeColor(color);
+                }
+                else {
+                    color = Color.white;
+                    ChangeColor(color);
+                }
+            }
 
-        // プレイヤーが乗っている間 or 落下確定時にlifeが減少
-        if (OnPlayer || life <= 0)
-        {
-            life -= lifeDecrease;
-        }
+            // プレイヤーが乗っている間 or 落下確定時にlifeが減少
+            if (OnPlayer && life > 0)
+            {
+                photonView.RPC(nameof(RPCDecreaseLeafLife), RpcTarget.AllViaServer);
+            }
+            else if (life <= 0) {
+                life -= lifeDecrease;
+            }
 
-        if (-40 <= life && life <= 0)
-        {
-            //this.transform.localScale = new Vector3(0.5f + life * 0.01f, 0.5f + life * 0.01f, 1);
-            //this.transform.localRotation = Quaternion.Euler(0, 0, life - 45);
-        }
-        if (life == -40)
-        {
-            rigidbody2d.bodyType = RigidbodyType2D.Dynamic;
-        }
-
-        if(this.transform.position.y < -6f)
-        {
-            // 使いまわし & 非アクティブ化
-            gameSceneManager.FallLeaf(gameObject);
-            this.gameObject.SetActive(false);
-        }
-
-        // マスタークライアントで落下処理
-        if (PhotonNetwork.IsMasterClient){
-            // プレイヤーが乗っているときlife減少 & 葉が落ちる演出
+            if (-40 <= life && life <= 0)
+            {
+                //this.transform.localScale = new Vector3(0.5f + life * 0.01f, 0.5f + life * 0.01f, 1);
+                //this.transform.localRotation = Quaternion.Euler(0, 0, life - 45);
+            }
+            if (life <= -40 && rigidbody2d.bodyType != RigidbodyType2D.Dynamic)
+            {
+                photonView.RPC(nameof(RPCFallLeaf), RpcTarget.AllViaServer);
+            }
             
-            
+
+            if(this.transform.position.y < -6f)
+            {
+                // 使いまわし & 非アクティブ化
+                photonView.RPC(nameof(RPCDeactivate), RpcTarget.AllViaServer);
+            }
         }
     }
 
@@ -105,5 +109,32 @@ public class Leaf : MonoBehaviourPunCallbacks
         OnPlayer = false;
     }
 
+    [PunRPC]
+    private void RPCDecreaseLeafLife() {
+        life -= lifeDecrease;
+    }
 
+
+    private void ChangeColor(Color color) {
+        if (leafsprite.color != color) {
+            float[] leafColor = {(float)color.r, (float)color.g, (float)color.b};
+            photonView.RPC(nameof(RPCChangeColor), RpcTarget.AllViaServer, leafColor);
+        }
+    }
+
+    [PunRPC]
+    private void RPCChangeColor(float[] color) {
+        leafsprite.color = new Color(color[0], color[1], color[2]);
+    }
+
+    [PunRPC]
+    private void RPCFallLeaf() {
+        rigidbody2d.bodyType = RigidbodyType2D.Dynamic;
+    }
+
+    [PunRPC]
+    private void RPCDeactivate() {
+        gameSceneManager.FallLeaf(gameObject);
+        this.gameObject.SetActive(false);
+    }
 }

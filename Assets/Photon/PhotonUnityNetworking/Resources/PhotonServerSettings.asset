@@ -46,6 +46,15 @@ MonoBehaviour:
   - GetFruits
   - RecycleFruit
   - RPCDeleteFruit
+  - RPCChangeColor
+  - RPCDecreaseLeafLife
+  - PlayerBorn
+  - RPCPlayerDied
+  - RPCFallLeaf
+  - RPCDeactivate
+  - RPCPlayerMove
+  - RPCGameEnd
+  - RPCPlayerGetFruit
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
