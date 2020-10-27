@@ -17,10 +17,15 @@ public class GamePlayer : MonoBehaviourPunCallbacks
 
     public int fruitNum = 0;
 
+    GameObject sceneManager;
+    GameSceneManager gameSceneManager;
+
     // Start is called before the first frame update
     void Start()
     {
         rb2d = GetComponent<Rigidbody2D>();
+        sceneManager = GameObject.Find("GameSceneManager");
+        gameSceneManager = sceneManager.GetComponent<GameSceneManager>();
     }
 
     // Update is called once per frame
@@ -33,6 +38,12 @@ public class GamePlayer : MonoBehaviourPunCallbacks
             else {
                 // 実機で実行
                 operatePlayer();
+            }
+
+
+            if (this.transform.position.y < -10f) {
+                gameSceneManager.PlayerDied();
+                this.gameObject.SetActive(false);
             }
         }
     }
@@ -64,6 +75,8 @@ public class GamePlayer : MonoBehaviourPunCallbacks
             var script = other.gameObject.GetComponent<Fruit>();
             script.TryGetItem(gameObject);
             script.DeleteFruit();
+
+            gameSceneManager.PlayerGetFruit(fruitNum);
             //var script = other.gameObject.GetComponent<Fruit>();
             //script.TryGetItem(gameObject);
         }
@@ -75,7 +88,7 @@ public class GamePlayer : MonoBehaviourPunCallbacks
                 // クリック離した瞬間
                 if (Input.GetMouseButtonUp(0)) {
                     // ジャンプ
-                    rb2d.velocity = jumpPower * jumpDirection;
+                    photonView.RPC(nameof(RPCPlayerMove), RpcTarget.All, jumpPower, jumpDirection);
                     isGround = false;
                 }
                 //クリック中
@@ -103,5 +116,10 @@ public class GamePlayer : MonoBehaviourPunCallbacks
                     jumpPower = FirstJumpPower;
                 }
             }
+    }
+
+    [PunRPC]
+    private void RPCPlayerMove(float jumpPower, Vector2 jumpDirection) {
+        rb2d.velocity = jumpPower * jumpDirection;
     }
 }

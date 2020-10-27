@@ -18,12 +18,16 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     private List<GameObject> fallLeaves = new List<GameObject>();
     public bool growLeafFlag = false;
 
-    [SerializeField]
-    private Fruit fruitPrefab = default;
+    private bool[] playerLive = new bool[4];
+    private int[] playerFruit = {-1, -1, -1, -1};
 
     public List<GameObject> fruits = new List<GameObject>();
     public List<GameObject> getFruits = new List<GameObject>();
     public bool getFruitFlag = false; 
+
+
+    private bool gameEnd = false;
+    private bool winner = true;
 
 
     // Start is called before the first frame update
@@ -51,6 +55,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 break;
         }
         PhotonNetwork.Instantiate("Player", v, Quaternion.identity);
+        photonView.RPC(nameof(PlayerBorn), RpcTarget.All, playerId);
 
         GameObject[] array = GameObject.FindGameObjectsWithTag("Leaf");
         for (int i = 0; i < array.Length; i++) {
@@ -89,6 +94,25 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         }
         else if (getFruitFlag) {
             getFruitFlag = false;
+        }
+
+        // ゲーム時間
+        gameTimer--;
+        if (gameTimer < 0) {
+            photonView.RPC(nameof(RPCGameEnd), RpcTarget.AllViaServer);
+        }
+        if (!playerLive[0] && !playerLive[1] && !playerLive[2] && !playerLive[3]) {
+            gameEnd = true;
+            winner = false;
+        }
+
+        // ゲーム終了
+        if (gameEnd) {
+            // ルーム退出
+            PhotonNetwork.LeaveRoom();
+
+            SceneManager.sceneLoaded += GameSceneLoaded;
+            SceneManager.LoadSceneAsync("ResultScene", LoadSceneMode.Single);
         }
     }
 
@@ -137,5 +161,51 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             fruit.GetComponent<Fruit>().Init(pos);
         }
         getFruits.Clear();
+    }
+
+    // プレイヤーの生存フラグON
+    [PunRPC]
+    private void PlayerBorn(int playerId) {
+        playerLive[playerId] = true;
+    }
+
+    public void PlayerDied() {
+        photonView.RPC(nameof(RPCPlayerDied), RpcTarget.AllViaServer, playerId);
+    }
+    [PunRPC]
+    private void RPCPlayerDied(int playerId) {
+        playerLive[playerId] = false;
+    }
+
+    // プレイヤーがフルーツ獲得
+    public void PlayerGetFruit(int fruitNum) {
+        photonView.RPC(nameof(RPCPlayerGetFruit), RpcTarget.AllViaServer, playerId, fruitNum);
+    }
+    [PunRPC]
+    private void RPCPlayerGetFruit(int playerId, int fruitNum) {
+        playerFruit[playerId] = fruitNum;
+    }
+
+    // ゲーム時間
+    [PunRPC]
+    private void RPCGameEnd() {
+        gameEnd = true;
+    }
+
+
+
+    private void GameSceneLoaded(Scene next, LoadSceneMode mode) {
+        // MatchSceneManager(script)取得
+        var sceneManager = GameObject.FindWithTag("GameManager").GetComponent<ResultSceneManager>();
+
+        // データ受け渡し
+        sceneManager.color = color;
+        for(int i = 0; i < 4; i++) {
+            sceneManager.fruit[i] = playerFruit[i];
+        }
+        sceneManager.winner = winner;
+
+        // イベントから削除
+        SceneManager.sceneLoaded -= GameSceneLoaded;
     }
 }
