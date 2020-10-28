@@ -10,25 +10,29 @@ public class ResultSceneManager : MonoBehaviour
     public bool winner = true;
     public int[] fruit = new int[4];
 
+
+    public bool receiveVariable = false;
+
     private bool draw = false;
 
-    private GameObject resultTextObj;
+    public GameObject resultTextObj = default;
     private Text resultText;
+    private string text;
 
     private bool result = true;
     // Start is called before the first frame update
     private void Start()
     {
-        resultTextObj = GameObject.Find("Text");
+        //resultTextObj = GameObject.Find("Text");
         resultText = resultTextObj.GetComponent<Text>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (result) {
+        if (result && receiveVariable) {
             if (!winner) {
-                resultText.text = "no winner!";
+                text = "no winner!";
                 Debug.Log("no win");
             }
             else {
@@ -47,15 +51,17 @@ public class ResultSceneManager : MonoBehaviour
                 Debug.Log(maxFruit);
 
                 if (!draw) {
-                    resultText.text = "player" + winPlayer.ToString() + "win!";
+                    text = "player" + winPlayer.ToString() + "win!";
                 }
                 else {
-                    resultText.text = "draw!";
+                    text = "draw!";
                 }
             }
-
+            
             result = false;
         }
+
+        resultText.text = text;
 
         if (Application.isEditor) {
             // エディタから実行

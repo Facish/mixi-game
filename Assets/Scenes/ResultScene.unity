@@ -252,6 +252,7 @@ MonoBehaviour:
   color: red
   winner: 1
   fruit: 00000000000000000000000000000000
+  receiveVariable: 0
 --- !u!4 &261846592
 Transform:
   m_ObjectHideFlags: 0
@@ -335,7 +336,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: ' '
+  m_Text: 
 --- !u!222 &431665886
 CanvasRenderer:
   m_ObjectHideFlags: 0

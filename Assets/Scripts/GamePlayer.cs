@@ -11,7 +11,8 @@ public class GamePlayer : MonoBehaviourPunCallbacks
     private float jumpAngle = Mathf.PI /6;
     private float jumpPower = 0f;
     private const float FirstJumpPower = 1f;
-    private const float AddPowerPerFrame = 0.01f;
+    private const float MaxJumpPower = 5f;
+    private const float AddPowerPerDeltaTime = 5f;
     private bool isGround = false;
 
 
@@ -108,7 +109,7 @@ public class GamePlayer : MonoBehaviourPunCallbacks
                 // キャラクター方向
                 this.transform.localScale = new Vector3(-Mathf.Sign(jumpAngle), 1, 1);
                 // 押している間ジャンプ力に加算
-                jumpPower += AddPowerPerFrame;
+                jumpPower += Time.deltaTime*AddPowerPerDeltaTime;
             }
             //クリックした瞬間
             if (Input.GetMouseButtonDown(0)) {
@@ -145,7 +146,7 @@ public class GamePlayer : MonoBehaviourPunCallbacks
                     // キャラクター方向
                     this.transform.localScale = new Vector3(-Mathf.Sign(jumpAngle), 1, 1);
                     // 押している間ジャンプ力に加算
-                    jumpPower += AddPowerPerFrame;
+                    jumpPower += Time.deltaTime*AddPowerPerDeltaTime;
                 }
                 // tapした瞬間
                 if (touch.phase == TouchPhase.Began) {

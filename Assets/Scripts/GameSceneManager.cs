@@ -205,6 +205,9 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             sceneManager.fruit[i] = playerFruit[i];
         }
         sceneManager.winner = winner;
+        sceneManager.receiveVariable = true;
+
+        Debug.Log("pass value");
 
         // イベントから削除
         SceneManager.sceneLoaded -= GameSceneLoaded;
