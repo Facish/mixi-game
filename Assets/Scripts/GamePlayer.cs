@@ -38,6 +38,7 @@ public class GamePlayer : MonoBehaviourPunCallbacks
             else {
                 // 実機で実行
                 operatePlayer();
+                operatePlayerAndroid();
             }
 
 
@@ -85,18 +86,55 @@ public class GamePlayer : MonoBehaviourPunCallbacks
     // とりあえずクリック操作を包んだ
     private void operatePlayer() {
         if (isGround) {
-                // クリック離した瞬間
-                if (Input.GetMouseButtonUp(0)) {
+            // クリック離した瞬間
+            if (Input.GetMouseButtonUp(0)) {
+                // ジャンプ
+                photonView.RPC(nameof(RPCPlayerMove), RpcTarget.All, jumpPower, jumpDirection);
+                isGround = false;
+            }
+            //クリック中
+            if (Input.GetMouseButton(0)) {
+                //Debug.Log(Input.mousePosition.x);
+
+                // 画面右クリック
+                if (Input.mousePosition.x > Screen.width/2) {
+                    jumpAngle = - Mathf.PI /8;
+                }
+                // 画面左クリック
+                else {
+                    jumpAngle = Mathf.PI /8;
+                }
+
+                // キャラクター方向
+                this.transform.localScale = new Vector3(-Mathf.Sign(jumpAngle), 1, 1);
+                // 押している間ジャンプ力に加算
+                jumpPower += AddPowerPerFrame;
+            }
+            //クリックした瞬間
+            if (Input.GetMouseButtonDown(0)) {
+                // ジャンプ変数のリセット
+                jumpAngle = 0;
+                jumpPower = FirstJumpPower;
+            }
+        }
+    }
+
+    private void operatePlayerAndroid() {
+        if (isGround) {
+            if (Input.touchCount > 0) {
+                Touch touch = Input.GetTouch(0);
+                // tap離した瞬間
+                if (touch.phase == TouchPhase.Ended) {
                     // ジャンプ
                     photonView.RPC(nameof(RPCPlayerMove), RpcTarget.All, jumpPower, jumpDirection);
                     isGround = false;
                 }
-                //クリック中
-                if (Input.GetMouseButton(0)) {
+                // tap中
+                if (touch.phase == TouchPhase.Moved) {
                     //Debug.Log(Input.mousePosition.x);
 
                     // 画面右クリック
-                    if (Input.mousePosition.x > Screen.width/2) {
+                    if (touch.position.x > Screen.width/2) {
                         jumpAngle = - Mathf.PI /8;
                     }
                     // 画面左クリック
@@ -109,13 +147,14 @@ public class GamePlayer : MonoBehaviourPunCallbacks
                     // 押している間ジャンプ力に加算
                     jumpPower += AddPowerPerFrame;
                 }
-                //クリックした瞬間
-                if (Input.GetMouseButtonDown(0)) {
+                // tapした瞬間
+                if (touch.phase == TouchPhase.Began) {
                     // ジャンプ変数のリセット
                     jumpAngle = 0;
                     jumpPower = FirstJumpPower;
                 }
             }
+        }
     }
 
     [PunRPC]

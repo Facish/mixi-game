@@ -35,6 +35,17 @@ public class TitleSceneManager : MonoBehaviour
                 // シーン切り替え
                 SceneManager.LoadScene("MatchScene");
             }
+
+            if (Input.touchCount > 0) {
+                Touch touch = Input.GetTouch(0);
+                 if (touch.phase == TouchPhase.Began) {
+                     // イベントに登録
+                    SceneManager.sceneLoaded += MatchSceneLoaded;
+
+                    // シーン切り替え
+                    SceneManager.LoadScene("MatchScene");
+                 }
+            }
         }
     }
 

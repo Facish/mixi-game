@@ -14,41 +14,49 @@ public class ResultSceneManager : MonoBehaviour
 
     private GameObject resultTextObj;
     private Text resultText;
+
+    private bool result = true;
     // Start is called before the first frame update
     private void Start()
     {
         resultTextObj = GameObject.Find("Text");
         resultText = resultTextObj.GetComponent<Text>();
-
-        if (!winner) {
-            resultText.text = "no winner!";
-        }
-        else {
-            var maxFruit = -1; 
-            int winPlayer = -1;
-            for (int i = 0; i < 4; i++) {
-                if (maxFruit < fruit[i]) {
-                    maxFruit = fruit[i];
-                    winPlayer = i;
-                    draw = false;
-                }
-                else if (maxFruit == fruit[i]) {
-                    draw = true;
-                }
-            }
-
-            if (!draw) {
-                resultText.text = "player" + winPlayer.ToString() + "win!";
-            }
-            else {
-                resultText.text = "draw!";
-            }
-        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (result) {
+            if (!winner) {
+                resultText.text = "no winner!";
+                Debug.Log("no win");
+            }
+            else {
+                var maxFruit = -1; 
+                int winPlayer = -1;
+                for (int i = 0; i < 4; i++) {
+                    if (maxFruit < fruit[i]) {
+                        maxFruit = fruit[i];
+                        winPlayer = i;
+                        draw = false;
+                    }
+                    else if (maxFruit == fruit[i]) {
+                        draw = true;
+                    }
+                }
+                Debug.Log(maxFruit);
+
+                if (!draw) {
+                    resultText.text = "player" + winPlayer.ToString() + "win!";
+                }
+                else {
+                    resultText.text = "draw!";
+                }
+            }
+
+            result = false;
+        }
+
         if (Application.isEditor) {
             // エディタから実行
             if (Input.GetMouseButtonDown(0)) {
@@ -61,6 +69,14 @@ public class ResultSceneManager : MonoBehaviour
             if (Input.GetMouseButtonDown(0)) {
                 // シーン切り替え
                 SceneManager.LoadScene("TitleScene");
+            }
+
+            if (Input.touchCount > 0) {
+                Touch touch = Input.GetTouch(0);
+                if (touch.phase == TouchPhase.Began) {
+                    // シーン切り替え
+                    SceneManager.LoadScene("TitleScene");
+                }
             }
         }
     }

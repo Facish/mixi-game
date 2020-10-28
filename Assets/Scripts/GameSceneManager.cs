@@ -10,7 +10,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     public string color = "red";
 
     public bool gameStart = false;
-    public int gameTimer = 18000;
+    public int gameTimer = 36000;
 
 
     private int playerId;
@@ -180,6 +180,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     // プレイヤーがフルーツ獲得
     public void PlayerGetFruit(int fruitNum) {
         photonView.RPC(nameof(RPCPlayerGetFruit), RpcTarget.AllViaServer, playerId, fruitNum);
+        Debug.Log(fruitNum);
     }
     [PunRPC]
     private void RPCPlayerGetFruit(int playerId, int fruitNum) {
