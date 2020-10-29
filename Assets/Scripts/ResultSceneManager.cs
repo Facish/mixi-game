@@ -15,6 +15,7 @@ public class ResultSceneManager : MonoBehaviour
 
     private bool draw = false;
 
+    [SerializeField]
     public GameObject resultTextObj = default;
     private Text resultText;
     private string text;

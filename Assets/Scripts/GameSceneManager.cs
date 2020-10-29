@@ -110,6 +110,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         if (gameEnd) {
             // ルーム退出
             PhotonNetwork.LeaveRoom();
+            PhotonNetwork.Disconnect();
 
             SceneManager.sceneLoaded += GameSceneLoaded;
             SceneManager.LoadSceneAsync("ResultScene", LoadSceneMode.Single);

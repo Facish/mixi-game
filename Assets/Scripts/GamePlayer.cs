@@ -11,7 +11,7 @@ public class GamePlayer : MonoBehaviourPunCallbacks
     private float jumpAngle = Mathf.PI /6;
     private float jumpPower = 0f;
     private const float FirstJumpPower = 1f;
-    private const float MaxJumpPower = 5f;
+    private const float MaxJumpPower = 10f;
     private const float AddPowerPerDeltaTime = 5f;
     private bool isGround = false;
 
@@ -21,12 +21,15 @@ public class GamePlayer : MonoBehaviourPunCallbacks
     GameObject sceneManager;
     GameSceneManager gameSceneManager;
 
+    private DrawLine drawLineSprite;
+
     // Start is called before the first frame update
     void Start()
     {
         rb2d = GetComponent<Rigidbody2D>();
         sceneManager = GameObject.Find("GameSceneManager");
         gameSceneManager = sceneManager.GetComponent<GameSceneManager>();
+        drawLineSprite = this.GetComponent<DrawLine>();
     }
 
     // Update is called once per frame
@@ -92,6 +95,7 @@ public class GamePlayer : MonoBehaviourPunCallbacks
                 // ジャンプ
                 photonView.RPC(nameof(RPCPlayerMove), RpcTarget.All, jumpPower, jumpDirection);
                 isGround = false;
+                drawLineSprite.LineDrawOff();
             }
             //クリック中
             if (Input.GetMouseButton(0)) {
@@ -109,13 +113,22 @@ public class GamePlayer : MonoBehaviourPunCallbacks
                 // キャラクター方向
                 this.transform.localScale = new Vector3(-Mathf.Sign(jumpAngle), 1, 1);
                 // 押している間ジャンプ力に加算
-                jumpPower += Time.deltaTime*AddPowerPerDeltaTime;
+                if (jumpPower < MaxJumpPower) {
+                    jumpPower += Time.deltaTime*AddPowerPerDeltaTime;
+                }
+
+
+                // 放物線の描画
+                drawLineSprite.SetPosition(new Vector3(this.transform.position.x, this.transform.position.y, 0f));
+                Vector2 jumpVec2 = jumpPower * jumpDirection;
+                drawLineSprite.SetVelocity(new Vector3(jumpVec2.x, jumpVec2.y, 0f));
             }
             //クリックした瞬間
             if (Input.GetMouseButtonDown(0)) {
                 // ジャンプ変数のリセット
                 jumpAngle = 0;
                 jumpPower = FirstJumpPower;
+                drawLineSprite.LineDrawOn();
             }
         }
     }
@@ -129,6 +142,7 @@ public class GamePlayer : MonoBehaviourPunCallbacks
                     // ジャンプ
                     photonView.RPC(nameof(RPCPlayerMove), RpcTarget.All, jumpPower, jumpDirection);
                     isGround = false;
+                    drawLineSprite.LineDrawOff();
                 }
                 // tap中
                 if (touch.phase == TouchPhase.Moved) {
@@ -147,12 +161,18 @@ public class GamePlayer : MonoBehaviourPunCallbacks
                     this.transform.localScale = new Vector3(-Mathf.Sign(jumpAngle), 1, 1);
                     // 押している間ジャンプ力に加算
                     jumpPower += Time.deltaTime*AddPowerPerDeltaTime;
+
+                    // 放物線の描画
+                    drawLineSprite.SetPosition(new Vector3(this.transform.position.x, this.transform.position.y, 0f));
+                    Vector2 jumpVec2 = jumpPower * jumpDirection;
+                    drawLineSprite.SetVelocity(new Vector3(jumpVec2.x, jumpVec2.y, 0f));
                 }
                 // tapした瞬間
                 if (touch.phase == TouchPhase.Began) {
                     // ジャンプ変数のリセット
                     jumpAngle = 0;
                     jumpPower = FirstJumpPower;
+                    drawLineSprite.LineDrawOn();
                 }
             }
         }

@@ -253,6 +253,7 @@ MonoBehaviour:
   winner: 1
   fruit: 00000000000000000000000000000000
   receiveVariable: 0
+  resultTextObj: {fileID: 431665883}
 --- !u!4 &261846592
 Transform:
   m_ObjectHideFlags: 0
