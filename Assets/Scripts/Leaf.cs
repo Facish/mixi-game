@@ -5,17 +5,17 @@ using UnityEngine;
 
 public class Leaf : MonoBehaviourPunCallbacks
 {
-    public int life;
+    public float life;
     public Color color = new Color(0, 0, 0);
-    public int StartLife = 2000;
-    public int growAmount = 2000;
+    public float StartLife = 2000f;
+    public float growAmount = 2000f;
     public Vector3 growPos;
     public bool isGrowing = false;
 
     private Rigidbody2D rigidbody2d;
     private SpriteRenderer leafsprite;
     private bool OnPlayer;
-    private int lifeDecrease = 2;
+    private float lifeDecrease = 30f;
 
     GameObject sceneManager;
     GameSceneManager gameSceneManager;
@@ -35,8 +35,8 @@ public class Leaf : MonoBehaviourPunCallbacks
     void Update()
     {
         if (growAmount < StartLife) {
-            growAmount += 1;
-            life += 1;
+            growAmount += Time.deltaTime*5;
+            life += Time.deltaTime*5;
         }
         
         if (PhotonNetwork.IsMasterClient) {
@@ -72,7 +72,7 @@ public class Leaf : MonoBehaviourPunCallbacks
                 photonView.RPC(nameof(RPCDecreaseLeafLife), RpcTarget.AllViaServer);
             }
             else if (life <= 0) {
-                life -= lifeDecrease;
+                life -= Time.deltaTime*lifeDecrease;
             }
 
             if (-40 <= life && life <= 0)
@@ -86,7 +86,7 @@ public class Leaf : MonoBehaviourPunCallbacks
             }
             
 
-            if(this.transform.position.y < -6f)
+            if(this.transform.position.y < -10f)
             {
                 // 使いまわし & 非アクティブ化
                 photonView.RPC(nameof(RPCDeactivate), RpcTarget.AllViaServer);
@@ -111,7 +111,7 @@ public class Leaf : MonoBehaviourPunCallbacks
 
     [PunRPC]
     private void RPCDecreaseLeafLife() {
-        life -= lifeDecrease;
+        life -= Time.deltaTime*lifeDecrease;
     }
 
 
