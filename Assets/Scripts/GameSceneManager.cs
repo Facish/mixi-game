@@ -134,9 +134,10 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             var sprite = leaf.GetComponent<SpriteRenderer>();
             //leaf.transform.localScale = new Vector3(1, 1, 1);
             leaf.transform.position = script.growPos;
-            leaf.transform.localRotation = Quaternion.Euler(0, 0, 0);
+            //leaf.transform.localRotation = Quaternion.Euler(0, 0, 0);
             script.life = script.StartLife/3;
             script.growAmount = script.StartLife/3;
+            script.ChangeColor(0);
             rb2d.bodyType = RigidbodyType2D.Kinematic;
             leaf.gameObject.SetActive(true);
         }

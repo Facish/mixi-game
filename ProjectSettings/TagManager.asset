@@ -48,6 +48,12 @@ TagManager:
   - name: Background
     uniqueID: 442771453
     locked: 0
+  - name: Sun
+    uniqueID: 2457155789
+    locked: 0
+  - name: Branches
+    uniqueID: 1877343549
+    locked: 0
   - name: Leaves
     uniqueID: 3328227689
     locked: 0

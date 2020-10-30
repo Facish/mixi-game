@@ -5,17 +5,34 @@ using UnityEngine;
 
 public class Leaf : MonoBehaviourPunCallbacks
 {
+    // 葉のスプライト一覧
+    public Sprite GreenBig;
+    public Sprite GreenMiddle;
+    public Sprite GreenSmall;
+    public Sprite YellowBig;
+    public Sprite YellowMiddle;
+    public Sprite YellowSmall;
+    public Sprite RedBig;
+    public Sprite RedMiddle;
+    public Sprite RedSmall;
+
+    private Sprite[,] LeafSprite;
+
+
     public float life;
-    public Color color = new Color(0, 0, 0);
+    public int leafColor = 0;
     public float StartLife = 2000f;
     public float growAmount = 2000f;
     public Vector3 growPos;
     public bool isGrowing = false;
+    private int leafSize = 0;
 
     private Rigidbody2D rigidbody2d;
     private SpriteRenderer leafsprite;
+    private EdgeCollider2D[] collider2Ds;
     private bool OnPlayer;
     private float lifeDecrease = 30f;
+    private float lifeIncrease = 60f;
 
     GameObject sceneManager;
     GameSceneManager gameSceneManager;
@@ -30,15 +47,16 @@ public class Leaf : MonoBehaviourPunCallbacks
 
         sceneManager = GameObject.Find("GameSceneManager");
         gameSceneManager = sceneManager.GetComponent<GameSceneManager>();
+
+        collider2Ds = GetComponents<EdgeCollider2D>();
+
+        LeafSprite = new Sprite[3,3]{{GreenBig, GreenMiddle, GreenSmall},
+                                     {YellowBig, YellowMiddle, YellowSmall},
+                                     {RedBig, RedMiddle, RedSmall}};
     }
 
     void Update()
-    {
-        if (growAmount < StartLife) {
-            growAmount += Time.deltaTime*5;
-            life += Time.deltaTime*5;
-        }
-        
+    {   
         if (PhotonNetwork.IsMasterClient) {
             // lifeに応じて葉の色を変更
             if (life > 0) {
@@ -48,8 +66,7 @@ public class Leaf : MonoBehaviourPunCallbacks
                 //    {
                 //        leafchild.GetComponent<SpriteRenderer>().color = Color.red;
                 //    }
-                    color = Color.red;
-                    ChangeColor(color);
+                    ChangeColor(2);
                 }
                 else if (life < StartLife / 3)
                 {
@@ -57,12 +74,10 @@ public class Leaf : MonoBehaviourPunCallbacks
                 //    {
                 //        leafchild.GetComponent<SpriteRenderer>().color = Color.yellow;
                 //    }
-                    color = Color.yellow;
-                    ChangeColor(color);
+                    ChangeColor(1);
                 }
                 else {
-                    color = Color.white;
-                    ChangeColor(color);
+                    ChangeColor(0);
                 }
             }
 
@@ -86,10 +101,27 @@ public class Leaf : MonoBehaviourPunCallbacks
             }
             
 
-            if(this.transform.position.y < -10f)
+            if(this.transform.position.y < -15f)
             {
                 // 使いまわし & 非アクティブ化
                 photonView.RPC(nameof(RPCDeactivate), RpcTarget.AllViaServer);
+            }
+
+
+            // 葉の育成
+            if (growAmount < StartLife) {
+                growAmount += Time.deltaTime*lifeIncrease;
+                life += Time.deltaTime*lifeIncrease;
+
+                if (growAmount < StartLife/2) {
+                    LeafGrow(2);
+                }
+                else if (growAmount < StartLife*3/4) {
+                    LeafGrow(1);
+                }
+                else {
+                    LeafGrow(0);
+                }
             }
         }
     }
@@ -115,17 +147,38 @@ public class Leaf : MonoBehaviourPunCallbacks
     }
 
 
-    private void ChangeColor(Color color) {
-        if (leafsprite.color != color) {
-            float[] leafColor = {(float)color.r, (float)color.g, (float)color.b};
-            photonView.RPC(nameof(RPCChangeColor), RpcTarget.AllViaServer, leafColor);
+    public void ChangeColor(int color) {
+        if (leafColor != color) {  
+            photonView.RPC(nameof(RPCChangeLeaf), RpcTarget.AllViaServer, color, leafSize);
+            leafColor = color;
+        }
+    }
+    private void LeafGrow(int growNum) {
+        if (leafSize != growNum) {
+            photonView.RPC(nameof(RPCChangeLeaf), RpcTarget.AllViaServer, leafColor, growNum);
+            leafSize = growNum;
         }
     }
 
     [PunRPC]
-    private void RPCChangeColor(float[] color) {
-        leafsprite.color = new Color(color[0], color[1], color[2]);
+    private void RPCChangeLeaf(int colorNum, int leafSiz) {
+        leafsprite.sprite = LeafSprite[colorNum, leafSiz];
+        for (int i = 0; i < 3; i++) {
+            if (i == leafSiz) {
+                collider2Ds[i].enabled = true;
+            }
+            else {
+                collider2Ds[i].enabled = false;
+            }
+        }
     }
+
+
+    [PunRPC]
+    private void RPCLeafGrow(int growNum) {
+        leafSize = growNum;
+    }
+
 
     [PunRPC]
     private void RPCFallLeaf() {
