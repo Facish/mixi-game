@@ -91,7 +91,7 @@ public class GamePlayer : MonoBehaviourPunCallbacks
             script.DeleteFruit();
 
             gameSceneManager.PlayerGetFruit(fruitNum);
-            audio.PlayOneShot(eatSound, 0.8f);
+            audio.PlayOneShot(eatSound, 0.65f);
             //var script = other.gameObject.GetComponent<Fruit>();
             //script.TryGetItem(gameObject);
         }
@@ -108,7 +108,7 @@ public class GamePlayer : MonoBehaviourPunCallbacks
                 drawLineSprite.LineDrawOff();
 
                 if (jumpPower > 5) {
-                    audio.PlayOneShot(longJumpSound);
+                    audio.PlayOneShot(longJumpSound, 0.95f);
                 }
                 else {
                     audio.PlayOneShot(audio.clip);
