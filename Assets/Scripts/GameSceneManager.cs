@@ -10,7 +10,8 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     public string color = "red";
 
     public bool gameStart = false;
-    public int gameTimer = 36000;
+    public float gameTimer = 10;
+    public float GameTime = 10;
 
 
     private int playerId;
@@ -97,7 +98,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         }
 
         // ゲーム時間
-        gameTimer--;
+        gameTimer -= Time.deltaTime*180;
         if (gameTimer < 0) {
             photonView.RPC(nameof(RPCGameEnd), RpcTarget.AllViaServer);
         }
@@ -131,7 +132,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             var script = leaf.GetComponent<Leaf>();
             var rb2d = leaf.GetComponent<Rigidbody2D>();
             var sprite = leaf.GetComponent<SpriteRenderer>();
-            leaf.transform.localScale = new Vector3(1, 1, 1);
+            //leaf.transform.localScale = new Vector3(1, 1, 1);
             leaf.transform.position = script.growPos;
             leaf.transform.localRotation = Quaternion.Euler(0, 0, 0);
             script.life = script.StartLife/3;

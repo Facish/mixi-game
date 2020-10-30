@@ -37,7 +37,7 @@ public class DrawLine : MonoBehaviour
             float hitTime = float.MaxValue;
             if (lineAlpha > 0) {
                 lineAlpha -= Time.deltaTime * 1/lineFadeOutDeltaTime;
-                Debug.Log(lineAlpha);
+                //Debug.Log(lineAlpha);
             }
             for (int i = 0; i < segmentCount; i++)
             {

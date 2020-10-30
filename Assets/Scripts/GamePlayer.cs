@@ -6,6 +6,7 @@ using UnityEngine;
 public class GamePlayer : MonoBehaviourPunCallbacks
 {
     private Rigidbody2D rb2d;
+    private AudioSource audio;
 
     private Vector2 jumpDirection = new Vector2(0f, 0f);
     private float jumpAngle = Mathf.PI /6;
@@ -14,6 +15,7 @@ public class GamePlayer : MonoBehaviourPunCallbacks
     private const float MaxJumpPower = 10f;
     private const float AddPowerPerDeltaTime = 5f;
     private bool isGround = false;
+    private float playerDirection = 1f;
 
 
     public int fruitNum = 0;
@@ -23,10 +25,17 @@ public class GamePlayer : MonoBehaviourPunCallbacks
 
     private DrawLine drawLineSprite;
 
+    public AudioClip shortJumpSound;
+    public AudioClip longJumpSound;
+    public AudioClip chargeSound1;
+    public AudioClip chargeSound2;
+    public AudioClip eatSound;
+
     // Start is called before the first frame update
     void Start()
     {
         rb2d = GetComponent<Rigidbody2D>();
+        audio = GetComponent<AudioSource>();
         sceneManager = GameObject.Find("GameSceneManager");
         gameSceneManager = sceneManager.GetComponent<GameSceneManager>();
         drawLineSprite = this.GetComponent<DrawLine>();
@@ -82,6 +91,7 @@ public class GamePlayer : MonoBehaviourPunCallbacks
             script.DeleteFruit();
 
             gameSceneManager.PlayerGetFruit(fruitNum);
+            audio.PlayOneShot(eatSound, 0.8f);
             //var script = other.gameObject.GetComponent<Fruit>();
             //script.TryGetItem(gameObject);
         }
@@ -96,6 +106,13 @@ public class GamePlayer : MonoBehaviourPunCallbacks
                 photonView.RPC(nameof(RPCPlayerMove), RpcTarget.All, jumpPower, jumpDirection);
                 isGround = false;
                 drawLineSprite.LineDrawOff();
+
+                if (jumpPower > 5) {
+                    audio.PlayOneShot(longJumpSound);
+                }
+                else {
+                    audio.PlayOneShot(audio.clip);
+                }
             }
             //クリック中
             if (Input.GetMouseButton(0)) {
@@ -111,7 +128,9 @@ public class GamePlayer : MonoBehaviourPunCallbacks
                 }
 
                 // キャラクター方向
-                this.transform.localScale = new Vector3(-Mathf.Sign(jumpAngle), 1, 1);
+                if (playerDirection != Mathf.Sign(jumpAngle)) {
+                    photonView.RPC(nameof(RPCPlayerDirection), RpcTarget.All, Mathf.Sign(jumpAngle));
+                }
                 // 押している間ジャンプ力に加算
                 if (jumpPower < MaxJumpPower) {
                     jumpPower += Time.deltaTime*AddPowerPerDeltaTime;
@@ -119,6 +138,7 @@ public class GamePlayer : MonoBehaviourPunCallbacks
 
 
                 // 放物線の描画
+                drawLineSprite.LineDrawOn();
                 drawLineSprite.SetPosition(new Vector3(this.transform.position.x, this.transform.position.y, 0f));
                 Vector2 jumpVec2 = jumpPower * jumpDirection;
                 drawLineSprite.SetVelocity(new Vector3(jumpVec2.x, jumpVec2.y, 0f));
@@ -128,7 +148,6 @@ public class GamePlayer : MonoBehaviourPunCallbacks
                 // ジャンプ変数のリセット
                 jumpAngle = 0;
                 jumpPower = FirstJumpPower;
-                drawLineSprite.LineDrawOn();
             }
         }
     }
@@ -163,6 +182,7 @@ public class GamePlayer : MonoBehaviourPunCallbacks
                     jumpPower += Time.deltaTime*AddPowerPerDeltaTime;
 
                     // 放物線の描画
+                    drawLineSprite.LineDrawOn();
                     drawLineSprite.SetPosition(new Vector3(this.transform.position.x, this.transform.position.y, 0f));
                     Vector2 jumpVec2 = jumpPower * jumpDirection;
                     drawLineSprite.SetVelocity(new Vector3(jumpVec2.x, jumpVec2.y, 0f));
@@ -181,5 +201,11 @@ public class GamePlayer : MonoBehaviourPunCallbacks
     [PunRPC]
     private void RPCPlayerMove(float jumpPower, Vector2 jumpDirection) {
         rb2d.velocity = jumpPower * jumpDirection;
+    }
+
+    [PunRPC]
+    private void RPCPlayerDirection(float dir) {
+        this.transform.localScale = new Vector3(-Mathf.Sign(jumpAngle), 1, 1);
+        playerDirection = dir;
     }
 }
