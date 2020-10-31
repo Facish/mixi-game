@@ -32,7 +32,7 @@ public class Leaf : MonoBehaviourPunCallbacks
     private SpriteRenderer leafsprite;
     private EdgeCollider2D[] collider2Ds;
     private bool OnPlayer;
-    private float lifeDecrease = 60f;
+    private float lifeDecrease = 90f;
     private float lifeIncrease = 30f;
 
 

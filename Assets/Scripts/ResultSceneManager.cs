@@ -19,6 +19,13 @@ public class ResultSceneManager : MonoBehaviour
     public GameObject resultText = default;
     private SpriteRenderer resultTextSprite;
 
+    private int maxFruit = -1;
+    private int winPlayer = -1;
+
+    public GameObject player1;
+    public GameObject player2;
+    public GameObject player3;
+    public GameObject player4;
 
     private bool result = true;
     // Start is called before the first frame update
@@ -26,6 +33,10 @@ public class ResultSceneManager : MonoBehaviour
     {
         //resultTextObj = GameObject.Find("Text");
         resultTextSprite = resultText.GetComponent<SpriteRenderer>();
+        player1.gameObject.SetActive(false);
+        player2.gameObject.SetActive(false);
+        player3.gameObject.SetActive(false);
+        player4.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -38,7 +49,7 @@ public class ResultSceneManager : MonoBehaviour
                 Debug.Log("no win");
             }
             else {
-                var maxFruit = -1; 
+                int maxFruit = -1; 
                 int winPlayer = -1;
                 for (int i = 0; i < 4; i++) {
                     if (maxFruit < fruit[i]) {
@@ -55,24 +66,32 @@ public class ResultSceneManager : MonoBehaviour
                 if (!draw) {
                     //text = "player" + winPlayer.ToString() + "win!";
                     switch(winPlayer) {
-                        case 1: 
+                        case 0: 
                             {
                                 resultTextSprite.sprite = resultText.GetComponent<ResultText>().Player1Win;
+                                player1.gameObject.SetActive(true);
+                                player1.GetComponent<Animator>().SetTrigger("OnceAnim");
+                            }
+                            break;
+                        case 1:
+                            {
+                                resultTextSprite.sprite = resultText.GetComponent<ResultText>().Player2Win;
+                                player3.gameObject.SetActive(true);
+                                player3.GetComponent<Animator>().SetTrigger("OnceAnim");
                             }
                             break;
                         case 2:
                             {
-                                resultTextSprite.sprite = resultText.GetComponent<ResultText>().Player2Win;
+                                resultTextSprite.sprite = resultText.GetComponent<ResultText>().Player3Win;
+                                player2.gameObject.SetActive(true);
+                                player2.GetComponent<Animator>().SetTrigger("OnceAnim");
                             }
                             break;
                         case 3:
                             {
-                                resultTextSprite.sprite = resultText.GetComponent<ResultText>().Player3Win;
-                            }
-                            break;
-                        case 4:
-                            {
                                 resultTextSprite.sprite = resultText.GetComponent<ResultText>().Player4Win;
+                                player4.gameObject.SetActive(true);
+                                player4.GetComponent<Animator>().SetTrigger("OnceAnim");
                             }
                             break;
                     }
