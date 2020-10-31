@@ -99,6 +99,7 @@ public class GamePlayer : MonoBehaviourPunCallbacks
 
         if (other.gameObject.tag == "WateringCan") {
             gameSceneManager.GrowLeafbyCan(other.gameObject);
+            Debug.Log("Watering Can get!");
         }
     }
 

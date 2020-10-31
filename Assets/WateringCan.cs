@@ -1,8 +1,10 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using Photon.Realtime;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WateringCan : MonoBehaviour
+public class WateringCan : MonoBehaviourPunCallbacks
 {
     // Start is called before the first frame update
     void Start()
@@ -14,5 +16,14 @@ public class WateringCan : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void DestroyWateringCan() {
+        photonView.RPC(nameof(RPCDestroyWateringCan), RpcTarget.AllViaServer);
+    }
+
+    [PunRPC]
+    private void RPCDestroyWateringCan() {
+        this.gameObject.SetActive(false);
     }
 }

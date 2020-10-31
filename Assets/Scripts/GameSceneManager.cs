@@ -10,8 +10,8 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     public string color = "red";
 
     public bool gameStart = false;
-    public float gameTimer = 10;
-    public float GameTime = 10;
+    public float gameTimer = 5;
+    public float GameTime = 5;
 
 
     public int playerId;
@@ -72,7 +72,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         }
 
         if (playerId == 1) {
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 6; i++) {
                 //photonView.RPC(nameof(CreateFruit), RpcTarget.AllViaServer);
                 CreateFruit();
             }
@@ -81,6 +81,9 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         for (int i = 0; i < array.Length; i++) {
             fruits.Add(array[i]);
         }
+
+        
+
     }
 
     // Update is called once per frame
@@ -116,19 +119,21 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 photonView.RPC(nameof(RPCPlayerAllFall), RpcTarget.AllViaServer);
             }
 
-            /*
+            
             if (gameTimer < GameTime/2 && createCansCount == 0) {
                 for (int i = 0; i < 2; i++) {
-                    CreateWateringCan();
+                    GameObject can = CreateWateringCan();
+                    wateringCans.Add(can);
                 }
                 createCansCount = 1;
             }
             if (gameTimer < GameTime/4 && createCansCount == 1) {
                 for (int i = 0; i < 4; i++) {
-                    CreateWateringCan();
+                    GameObject can = CreateWateringCan();
+                    wateringCans.Add(can);
                 }
                 createCansCount = 2;
-            }*/
+            }
         }
         
 
@@ -223,7 +228,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     //[PunRPC]
     private GameObject CreateWateringCan() {
         var pos = RandomPosition();
-        GameObject wateringCan = PhotonNetwork.Instantiate("WateringCan", pos, Quaternion.identity);
+        var wateringCan = PhotonNetwork.Instantiate("WateringCan", pos, Quaternion.identity);
         return wateringCan;
     }
 
@@ -232,7 +237,8 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             photonView.RPC(nameof(RPCGrowLeafbyCan), RpcTarget.AllViaServer, wateringCans.IndexOf(wateringCan));
             wateringCans.Remove(wateringCan);
             //PhotonNetwork.Destory(wateringCan);
-            wateringCan.SetActive(false);
+            UnoccupiedPosition(wateringCan.transform.position);
+            wateringCan.GetComponent<WateringCan>().DestroyWateringCan();
         }
     }
     [PunRPC]
@@ -241,9 +247,9 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             var script = leaf.GetComponent<Leaf>();
             script.GrowbyWater();
         }
-        var can = wateringCans[index];
+        /*var can = wateringCans[index];
         wateringCans.RemoveAt(index);
-        can.SetActive(false);
+        can.SetActive(false);*/
     }
 
     // プレイヤーの生存フラグON
