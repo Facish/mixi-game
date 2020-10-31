@@ -77,7 +77,8 @@ public class DrawLine : MonoBehaviour
         lineRenderers[index].SetPosition(1, GetArcPositionAtTime(endTime));
         lineRenderers[index].enabled = draw;
 
-        lineRenderers[index].SetColors(new Color(1, 1, 1, 0), new Color(1, 1, 1, 0));
+        lineRenderers[index].startColor = Color.green;
+        lineRenderers[index].endColor = Color.green;
     }
 
     private void CreateLineRendererObjects()
@@ -104,6 +105,7 @@ public class DrawLine : MonoBehaviour
             lineRenderers[i].endWidth = arcWidth;
             lineRenderers[i].numCapVertices = 5;
             lineRenderers[i].enabled = false;
+            lineRenderers[i].GetComponent<Renderer>().sortingLayerName = "Branches";
         }
     } 
 

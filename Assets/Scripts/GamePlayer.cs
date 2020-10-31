@@ -30,6 +30,7 @@ public class GamePlayer : MonoBehaviourPunCallbacks
     public AudioClip chargeSound1;
     public AudioClip chargeSound2;
     public AudioClip eatSound;
+    public AudioClip waterSound;
 
     // Start is called before the first frame update
     void Start()
@@ -99,6 +100,7 @@ public class GamePlayer : MonoBehaviourPunCallbacks
 
         if (other.gameObject.tag == "WateringCan") {
             gameSceneManager.GrowLeafbyCan(other.gameObject);
+            audio.PlayOneShot(waterSound, 0.8f);
             Debug.Log("Watering Can get!");
         }
     }
@@ -168,6 +170,13 @@ public class GamePlayer : MonoBehaviourPunCallbacks
                     photonView.RPC(nameof(RPCPlayerMove), RpcTarget.All, jumpPower, jumpDirection);
                     isGround = false;
                     drawLineSprite.LineDrawOff();
+
+                    if (jumpPower > 5) {
+                        audio.PlayOneShot(longJumpSound, 0.95f);
+                    }
+                    else {
+                        audio.PlayOneShot(audio.clip);
+                    }
                 }
                 // tap中
                 if (touch.phase == TouchPhase.Moved) {

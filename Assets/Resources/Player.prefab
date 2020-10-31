@@ -153,6 +153,7 @@ MonoBehaviour:
   chargeSound1: {fileID: 0}
   chargeSound2: {fileID: 0}
   eatSound: {fileID: 8300000, guid: b3dbdc778532cca4aa4da4317bed7afe, type: 3}
+  waterSound: {fileID: 8300000, guid: 54cf67ab18252544bb4946ee5c352dee, type: 3}
 --- !u!114 &977973506313672036
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -203,7 +204,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed93467126cf93f468112aaa277d9e82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  arcMaterial: {fileID: 0}
+  arcMaterial: {fileID: 2100000, guid: b957742c5b9bfd441b9b330c8b55d0c5, type: 2}
   arcWidth: 0.02
 --- !u!82 &-6042738197658517816
 AudioSource:

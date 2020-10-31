@@ -28,7 +28,7 @@ public class Fruit : MonoBehaviourPunCallbacks
 
 
     public void TryGetItem(GameObject player) {
-        getScore = 0;
+        getScore = 1;
         photonView.RPC(nameof(RPCTryGetItem), RpcTarget.AllViaServer);
         player.GetComponent<GamePlayer>().fruitNum += getScore;//getScore;
     }
@@ -41,10 +41,11 @@ public class Fruit : MonoBehaviourPunCallbacks
 
             if (info.Sender.ActorNumber == PhotonNetwork.LocalPlayer.ActorNumber) {
                 Debug.Log("get a fruit");
-                getScore = 1;
+                
             }
             else {
                 Debug.Log("miss");
+                getScore = 0;
             }
         }
     }

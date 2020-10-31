@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: -966739607
   m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 0dca83337c6d1bd4f8fb658a15b1af5b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7f2d6a7498c50534c8adfe6be51d86b8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -195,21 +195,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da4a76e72dec01f429e13789b8ff00fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GreenBig: {fileID: 21300000, guid: 0dca83337c6d1bd4f8fb658a15b1af5b, type: 3}
-  GreenMiddle: {fileID: 21300000, guid: 08f396bc2cd2bcc40ae4376908b909fd, type: 3}
-  GreenSmall: {fileID: 21300000, guid: 396133f1a4dd2d8449925f610f353d47, type: 3}
-  YellowBig: {fileID: 21300000, guid: eb157158044beee4c8a76f07e51f96fc, type: 3}
-  YellowMiddle: {fileID: 21300000, guid: 505f7d598eff2c44197ef5a5d7c17100, type: 3}
-  YellowSmall: {fileID: 21300000, guid: be687d410f576cf4b90738ac938068ff, type: 3}
-  RedBig: {fileID: 21300000, guid: 193fbec1d12e3b3428fe714bdfd957b2, type: 3}
-  RedMiddle: {fileID: 21300000, guid: 8f452ecc0d0a6c446b98ab1baa70e14c, type: 3}
-  RedSmall: {fileID: 21300000, guid: ea4892ec1fd51ad49957fc266ac15aa1, type: 3}
+  GreenBig: {fileID: 21300000, guid: 7f2d6a7498c50534c8adfe6be51d86b8, type: 3}
+  GreenMiddle: {fileID: 21300000, guid: 1a5a141eddc31a240a6a6c746df08bb9, type: 3}
+  GreenSmall: {fileID: 21300000, guid: 4616d32c7ba4f5c4ea99a45a193c831d, type: 3}
+  YellowBig: {fileID: 21300000, guid: 60af4f103ef535e449662c678a66d4a2, type: 3}
+  YellowMiddle: {fileID: 21300000, guid: baa5bc34956d70c438f70cfdc466734e, type: 3}
+  YellowSmall: {fileID: 21300000, guid: 4dbd2539405b34b4fb92733f404c68fa, type: 3}
+  RedBig: {fileID: 21300000, guid: dff774a1f77e4e746b21a421c612117e, type: 3}
+  RedMiddle: {fileID: 21300000, guid: 993d6b50c8260d544aaff911055048c3, type: 3}
+  RedSmall: {fileID: 21300000, guid: 4b76ee86e8fa79c4a91a6c18549ddaeb, type: 3}
   life: 0
-  color: {r: 0, g: 0, b: 0, a: 0}
+  leafColor: 0
   StartLife: 2000
   growAmount: 2000
+  growAmoutbyCan: 1000
   growPos: {x: 0, y: 0, z: 0}
   isGrowing: 0
+  leafSize: 0
+  onItem: 0
 --- !u!114 &8807443966452984305
 MonoBehaviour:
   m_ObjectHideFlags: 0
