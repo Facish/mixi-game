@@ -206,9 +206,12 @@ public class Leaf : MonoBehaviourPunCallbacks
                 life += growAmoutbyCan;
             }
             else {
-                life += StartLife - growAmount;
+                life = StartLife;
                 growAmount = StartLife;
             }
+        }
+        else {
+            life = StartLife;
         }
     }
 

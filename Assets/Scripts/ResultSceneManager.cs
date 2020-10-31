@@ -16,16 +16,16 @@ public class ResultSceneManager : MonoBehaviour
     private bool draw = false;
 
     [SerializeField]
-    public GameObject resultTextObj = default;
-    private Text resultText;
-    private string text;
+    public GameObject resultText = default;
+    private SpriteRenderer resultTextSprite;
+
 
     private bool result = true;
     // Start is called before the first frame update
     private void Start()
     {
         //resultTextObj = GameObject.Find("Text");
-        resultText = resultTextObj.GetComponent<Text>();
+        resultTextSprite = resultText.GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -33,7 +33,8 @@ public class ResultSceneManager : MonoBehaviour
     {
         if (result && receiveVariable) {
             if (!winner) {
-                text = "no winner!";
+                //text = "no winner!";
+                resultTextSprite.sprite = resultText.GetComponent<ResultText>().NoWinner;
                 Debug.Log("no win");
             }
             else {
@@ -52,17 +53,43 @@ public class ResultSceneManager : MonoBehaviour
                 Debug.Log(maxFruit);
 
                 if (!draw) {
-                    text = "player" + winPlayer.ToString() + "win!";
+                    //text = "player" + winPlayer.ToString() + "win!";
+                    switch(winPlayer) {
+                        case 1: 
+                            {
+                                resultTextSprite.sprite = resultText.GetComponent<ResultText>().Player1Win;
+                            }
+                            break;
+                        case 2:
+                            {
+                                resultTextSprite.sprite = resultText.GetComponent<ResultText>().Player2Win;
+                            }
+                            break;
+                        case 3:
+                            {
+                                resultTextSprite.sprite = resultText.GetComponent<ResultText>().Player3Win;
+                            }
+                            break;
+                        case 4:
+                            {
+                                resultTextSprite.sprite = resultText.GetComponent<ResultText>().Player4Win;
+                            }
+                            break;
+                    }
+                    
+                    Debug.Log("player" + winPlayer.ToString() + "win");
                 }
                 else {
-                    text = "draw!";
+                    //text = "draw!";
+                    resultTextSprite.sprite = resultText.GetComponent<ResultText>().Draw;
+                    Debug.Log("draw");
                 }
             }
             
             result = false;
         }
 
-        resultText.text = text;
+        //resultText.text = text;
 
         if (Application.isEditor) {
             // エディタから実行
