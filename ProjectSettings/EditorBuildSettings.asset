@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/MatchScene.unity
     guid: 51d9d8d5e83adde42b1be3c11ec493a7
   - enabled: 1
+    path: Assets/Scenes/WaitScene.unity
+    guid: 6004c3ca995bfab488a4b0d69d3dd70f
+  - enabled: 1
     path: Assets/Scenes/GameScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1

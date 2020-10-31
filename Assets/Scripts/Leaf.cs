@@ -25,7 +25,7 @@ public class Leaf : MonoBehaviourPunCallbacks
     public float growAmount = 2000f;
     public Vector3 growPos;
     public bool isGrowing = false;
-    private int leafSize = 0;
+    public int leafSize = 0;
 
     private Rigidbody2D rigidbody2d;
     private SpriteRenderer leafsprite;

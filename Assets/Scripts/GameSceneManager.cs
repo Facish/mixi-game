@@ -78,7 +78,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     void Update()
     {
         // 葉が落ちた時のアクティブ化(マスタークライアントで処理)
-        if (PhotonNetwork.IsMasterClient && growLeafFlag) {
+        if (playerId == 1 && growLeafFlag) {
             foreach(GameObject leaf in leaves) {
                 photonView.RPC(nameof(GrowLeaf), RpcTarget.AllViaServer);
             }
@@ -89,7 +89,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         }
 
         // リンゴの生成
-        if (PhotonNetwork.IsMasterClient && getFruitFlag) {
+        if (playerId == 1 && getFruitFlag) {
             photonView.RPC(nameof(RecycleFruit), RpcTarget.AllViaServer);
             getFruitFlag = false;
         }
@@ -99,13 +99,15 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 
         // ゲーム時間
         gameTimer -= Time.deltaTime*180;
-        if (gameTimer < 0) {
-            photonView.RPC(nameof(RPCGameEnd), RpcTarget.AllViaServer);
+        if (playerId == 1) {
+            if (gameTimer < 0) {
+                photonView.RPC(nameof(RPCGameEnd), RpcTarget.AllViaServer);
+            }
+            if (!playerLive[0] && !playerLive[1] && !playerLive[2] && !playerLive[3]) {
+                photonView.RPC(nameof(RPCPlayerAllFall), RpcTarget.AllViaServer);
+            }
         }
-        if (!playerLive[0] && !playerLive[1] && !playerLive[2] && !playerLive[3]) {
-            gameEnd = true;
-            winner = false;
-        }
+        
 
         // ゲーム終了
         if (gameEnd) {
@@ -133,14 +135,16 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             var rb2d = leaf.GetComponent<Rigidbody2D>();
             var sprite = leaf.GetComponent<SpriteRenderer>();
             //leaf.transform.localScale = new Vector3(1, 1, 1);
-            leaf.transform.position = script.growPos;
             //leaf.transform.localRotation = Quaternion.Euler(0, 0, 0);
             script.life = script.StartLife/3;
             script.growAmount = script.StartLife/3;
+            script.leafSize = 2;
             script.ChangeColor(0);
             rb2d.bodyType = RigidbodyType2D.Kinematic;
+            leaf.transform.position = script.growPos;
             leaf.gameObject.SetActive(true);
         }
+        fallLeaves.Clear();
     }
 
     [PunRPC]
@@ -194,6 +198,12 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void RPCGameEnd() {
         gameEnd = true;
+    }
+
+    [PunRPC]
+    private void RPCPlayerAllFall() {
+        gameEnd = true;
+        winner = false;
     }
 
 

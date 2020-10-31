@@ -1,9 +1,8 @@
-﻿using Photon.Pun;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GamePlayer : MonoBehaviourPunCallbacks
+public class WaitScenePlayer : MonoBehaviour
 {
     private Rigidbody2D rb2d;
     private AudioSource audio;
@@ -36,29 +35,25 @@ public class GamePlayer : MonoBehaviourPunCallbacks
     {
         rb2d = GetComponent<Rigidbody2D>();
         audio = GetComponent<AudioSource>();
-        sceneManager = GameObject.Find("GameSceneManager");
-        gameSceneManager = sceneManager.GetComponent<GameSceneManager>();
         drawLineSprite = this.GetComponent<DrawLine>();
     }
 
     // Update is called once per frame
     private void Update() {
-        if (photonView.IsMine) {
-            if (Application.isEditor) {
-                // エディタから実行
-                operatePlayer();
-            }
-            else {
-                // 実機で実行
-                operatePlayer();
-                operatePlayerAndroid();
-            }
+        if (Application.isEditor) {
+            // エディタから実行
+            operatePlayer();
+        }
+        else {
+            // 実機で実行
+            operatePlayer();
+            operatePlayerAndroid();
+        }
 
 
-            if (this.transform.position.y < -10f) {
-                gameSceneManager.PlayerDied();
-                this.gameObject.SetActive(false);
-            }
+        if (this.transform.position.y < -10f) {
+            this.transform.position = new Vector3(-6.3f, 4.4f);
+            drawLineSprite.SetVelocity(new Vector3(0f, 0f, 0f));
         }
     }
 
@@ -83,27 +78,13 @@ public class GamePlayer : MonoBehaviourPunCallbacks
     }
 
 
-    private void OnTriggerEnter2D(Collider2D other) {
-        Debug.Log("Trigger");
-        if (other.gameObject.tag == "Fruit") {
-            var script = other.gameObject.GetComponent<Fruit>();
-            script.TryGetItem(gameObject);
-            script.DeleteFruit();
-
-            gameSceneManager.PlayerGetFruit(fruitNum);
-            audio.PlayOneShot(eatSound, 0.65f);
-            //var script = other.gameObject.GetComponent<Fruit>();
-            //script.TryGetItem(gameObject);
-        }
-    }
-
     // とりあえずクリック操作を包んだ
     private void operatePlayer() {
         if (isGround) {
             // クリック離した瞬間
             if (Input.GetMouseButtonUp(0)) {
                 // ジャンプ
-                photonView.RPC(nameof(RPCPlayerMove), RpcTarget.All, jumpPower, jumpDirection);
+                PlayerMove(jumpPower, jumpDirection);
                 isGround = false;
                 drawLineSprite.LineDrawOff();
 
@@ -129,7 +110,7 @@ public class GamePlayer : MonoBehaviourPunCallbacks
 
                 // キャラクター方向
                 if (playerDirection != Mathf.Sign(jumpAngle)) {
-                    photonView.RPC(nameof(RPCPlayerDirection), RpcTarget.All, Mathf.Sign(jumpAngle));
+                    PlayerDirection(Mathf.Sign(jumpAngle));
                 }
                 // 押している間ジャンプ力に加算
                 if (jumpPower < MaxJumpPower) {
@@ -137,11 +118,11 @@ public class GamePlayer : MonoBehaviourPunCallbacks
                 }
 
 
-                // 放物線の描画     
+                // 放物線の描画
+                drawLineSprite.LineDrawOn();
                 drawLineSprite.SetPosition(new Vector3(this.transform.position.x, this.transform.position.y, 0f));
                 Vector2 jumpVec2 = jumpPower * jumpDirection;
                 drawLineSprite.SetVelocity(new Vector3(jumpVec2.x, jumpVec2.y, 0f));
-                drawLineSprite.LineDrawOn();
             }
             //クリックした瞬間
             if (Input.GetMouseButtonDown(0)) {
@@ -159,7 +140,7 @@ public class GamePlayer : MonoBehaviourPunCallbacks
                 // tap離した瞬間
                 if (touch.phase == TouchPhase.Ended) {
                     // ジャンプ
-                    photonView.RPC(nameof(RPCPlayerMove), RpcTarget.All, jumpPower, jumpDirection);
+                    PlayerMove(jumpPower, jumpDirection);
                     isGround = false;
                     drawLineSprite.LineDrawOff();
                 }
@@ -198,13 +179,12 @@ public class GamePlayer : MonoBehaviourPunCallbacks
         }
     }
 
-    [PunRPC]
-    private void RPCPlayerMove(float jumpPower, Vector2 jumpDirection) {
+    private void PlayerMove(float jumpPower, Vector2 jumpDirection) {
         rb2d.velocity = jumpPower * jumpDirection;
     }
 
-    [PunRPC]
-    private void RPCPlayerDirection(float dir) {
+
+    private void PlayerDirection(float dir) {
         this.transform.localScale = new Vector3(-Mathf.Sign(jumpAngle), 1, 1);
         playerDirection = dir;
     }

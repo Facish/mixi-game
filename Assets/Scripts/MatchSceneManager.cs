@@ -27,8 +27,9 @@ public class MatchSceneManager : MonoBehaviourPunCallbacks
         PhotonNetwork.IsMessageQueueRunning = false;
         Debug.Log("ルームに参加しました");
 
-        SceneManager.sceneLoaded += GameSceneLoaded;
-        SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Single);
+        //SceneManager.sceneLoaded += GameSceneLoaded;
+        //SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Single);
+        SceneManager.LoadScene("WaitScene");
     }
 
     // 通常のマッチングが失敗した時に呼ばれるコールバック
