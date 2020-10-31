@@ -95,6 +95,11 @@ public class GamePlayer : MonoBehaviourPunCallbacks
             //var script = other.gameObject.GetComponent<Fruit>();
             //script.TryGetItem(gameObject);
         }
+
+
+        if (other.gameObject.tag == "WateringCan") {
+            gameSceneManager.GrowLeafbyCan(other.gameObject);
+        }
     }
 
     // とりあえずクリック操作を包んだ

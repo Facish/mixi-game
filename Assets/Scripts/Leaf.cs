@@ -23,6 +23,7 @@ public class Leaf : MonoBehaviourPunCallbacks
     public int leafColor = 0;
     public float StartLife = 2000f;
     public float growAmount = 2000f;
+    public float growAmoutbyCan = 1000f;
     public Vector3 growPos;
     public bool isGrowing = false;
     public int leafSize = 0;
@@ -33,6 +34,10 @@ public class Leaf : MonoBehaviourPunCallbacks
     private bool OnPlayer;
     private float lifeDecrease = 30f;
     private float lifeIncrease = 60f;
+
+
+    public bool onItem = false;
+
 
     GameObject sceneManager;
     GameSceneManager gameSceneManager;
@@ -57,7 +62,7 @@ public class Leaf : MonoBehaviourPunCallbacks
 
     void Update()
     {   
-        if (PhotonNetwork.IsMasterClient) {
+        if (gameSceneManager.playerId == 1) {
             // lifeに応じて葉の色を変更
             if (life > 0) {
                 if (life < StartLife / 8)
@@ -179,6 +184,33 @@ public class Leaf : MonoBehaviourPunCallbacks
         leafSize = growNum;
     }
 
+    public void GrowbyWater() {
+        if (gameSceneManager.playerId == 1) {
+            photonView.RPC(nameof(RPCGrowbyWater), RpcTarget.AllViaServer);
+            if (growAmount < StartLife/2) {
+                LeafGrow(2);
+            }
+            else if (growAmount < StartLife*3/4) {
+                LeafGrow(1);
+            }
+            else {
+                LeafGrow(0);
+            }
+        }
+    }
+    [PunRPC]
+    private void RPCGrowbyWater() {
+        if (growAmount < StartLife) {
+            if (StartLife - growAmount > growAmoutbyCan) {
+                growAmount += growAmoutbyCan;
+                life += growAmoutbyCan;
+            }
+            else {
+                life += StartLife - growAmount;
+                growAmount = StartLife;
+            }
+        }
+    }
 
     [PunRPC]
     private void RPCFallLeaf() {

@@ -60,4 +60,13 @@ public class Fruit : MonoBehaviourPunCallbacks
         this.gameObject.SetActive(false);
     }
 
+    public void AppearFruit(Vector3 pos) {
+        photonView.RPC(nameof(RPCAppearFruit), RpcTarget.AllViaServer, pos);
+    }
+    [PunRPC]
+    private void RPCAppearFruit(Vector3 pos) {
+        this.gameObject.SetActive(true);
+        Init(pos);
+    }
+
 }

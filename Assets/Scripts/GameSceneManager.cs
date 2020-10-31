@@ -14,10 +14,16 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     public float GameTime = 10;
 
 
-    private int playerId;
+    public int playerId;
     private List<GameObject> leaves = new List<GameObject>();
     private List<GameObject> fallLeaves = new List<GameObject>();
+
+    private List<Vector3> vacantLeafPositions = new List<Vector3>();
+    private List<Vector3> occupiedLeafPositions = new List<Vector3>();
     public bool growLeafFlag = false;
+
+    private List<GameObject> wateringCans = new List<GameObject>();
+    private int createCansCount = 0;
 
     private bool[] playerLive = new bool[4];
     private int[] playerFruit = {-1, -1, -1, -1};
@@ -61,11 +67,14 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         GameObject[] array = GameObject.FindGameObjectsWithTag("Leaf");
         for (int i = 0; i < array.Length; i++) {
             leaves.Add(array[i]);
+            var pos = array[i].transform.position;
+            vacantLeafPositions.Add(new Vector3(pos.x, pos.y + 1f, pos.z));
         }
 
         if (playerId == 1) {
             for (int i = 0; i < 10; i++) {
-                photonView.RPC(nameof(CreateFruit), RpcTarget.AllViaServer);
+                //photonView.RPC(nameof(CreateFruit), RpcTarget.AllViaServer);
+                CreateFruit();
             }
         }
         array = GameObject.FindGameObjectsWithTag("Fruit");
@@ -90,7 +99,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 
         // リンゴの生成
         if (playerId == 1 && getFruitFlag) {
-            photonView.RPC(nameof(RecycleFruit), RpcTarget.AllViaServer);
+            RecycleFruit();
             getFruitFlag = false;
         }
         else if (getFruitFlag) {
@@ -106,6 +115,20 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             if (!playerLive[0] && !playerLive[1] && !playerLive[2] && !playerLive[3]) {
                 photonView.RPC(nameof(RPCPlayerAllFall), RpcTarget.AllViaServer);
             }
+
+            /*
+            if (gameTimer < GameTime/2 && createCansCount == 0) {
+                for (int i = 0; i < 2; i++) {
+                    CreateWateringCan();
+                }
+                createCansCount = 1;
+            }
+            if (gameTimer < GameTime/4 && createCansCount == 1) {
+                for (int i = 0; i < 4; i++) {
+                    CreateWateringCan();
+                }
+                createCansCount = 2;
+            }*/
         }
         
 
@@ -147,27 +170,80 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         fallLeaves.Clear();
     }
 
-    [PunRPC]
+    private Vector3 RandomPosition() {
+        Debug.Log(vacantLeafPositions.Count);
+        int randomPos = Random.Range(0, vacantLeafPositions.Count);
+        Vector3 position = vacantLeafPositions[randomPos];
+        vacantLeafPositions.RemoveAt(randomPos);
+        occupiedLeafPositions.Add(position);
+        return position;
+    }
+    private void UnoccupiedPosition(Vector3 position) {
+        occupiedLeafPositions.Remove(position);
+        vacantLeafPositions.Add(position);
+    }
+
+    //[PunRPC]
     private void CreateFruit() {
-        var pos = new Vector3(Random.Range(-6f, 6f), Random.Range(-3f, 3f));
-        var fruit = PhotonNetwork.Instantiate("Fruit", pos, Quaternion.identity);
-        //fruit.Init(pos);
+        if (playerId == 1) {
+            var pos = RandomPosition();
+            var fruit = PhotonNetwork.Instantiate("Fruit", pos, Quaternion.identity);
+            //fruit.Init(pos);
+        }
     }
 
     [PunRPC]
-    public void GetFruits(GameObject fruit) {
+    public void GetFruits(GameObject fruit) {  
+        if (playerId == 1) {   
+            UnoccupiedPosition(fruit.transform.position);
+        }
         fruits.Remove(fruit);
         getFruits.Add(fruit);
     }
 
-    [PunRPC]
     private void RecycleFruit() {
-        foreach(GameObject fruit in getFruits) {
-            var pos = new Vector3(Random.Range(-6f, 6f), Random.Range(-3f, 3f));
-            fruit.gameObject.SetActive(true);
-            fruit.GetComponent<Fruit>().Init(pos);
+        foreach(GameObject fruit in getFruits)  {
+            var pos = RandomPosition();
+            fruit.GetComponent<Fruit>().AppearFruit(pos);
         }
+        photonView.RPC(nameof(RPCGetFruitsClear), RpcTarget.AllViaServer);
+    }
+    /*
+    [PunRPC]
+    private void RPCRecycleFruit(GameObject fruit, Vector3 pos) {  
+        fruit.gameObject.SetActive(true);
+        fruit.GetComponent<Fruit>().Init(pos);
+    }
+    */
+    [PunRPC]
+    private void RPCGetFruitsClear() {
         getFruits.Clear();
+    }
+
+    //[PunRPC]
+    private GameObject CreateWateringCan() {
+        var pos = RandomPosition();
+        GameObject wateringCan = PhotonNetwork.Instantiate("WateringCan", pos, Quaternion.identity);
+        return wateringCan;
+    }
+
+    public void GrowLeafbyCan(GameObject wateringCan) {
+        if (playerId == 1){
+            photonView.RPC(nameof(RPCGrowLeafbyCan), RpcTarget.AllViaServer, wateringCans.IndexOf(wateringCan));
+            wateringCans.Remove(wateringCan);
+            //PhotonNetwork.Destory(wateringCan);
+            wateringCan.SetActive(false);
+        }
+    }
+    [PunRPC]
+    private void RPCGrowLeafbyCan(int index) {
+        foreach(GameObject leaf in leaves) {
+            var script = leaf.GetComponent<Leaf>();
+            script.GrowbyWater();
+        }
+        var can = wateringCans[index];
+        wateringCans.RemoveAt(index);
+        can.SetActive(false);
     }
 
     // プレイヤーの生存フラグON
