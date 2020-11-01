@@ -17,7 +17,6 @@ GameObject:
   - component: {fileID: 2374921813849322583}
   - component: {fileID: -7761067181865340115}
   - component: {fileID: -6042738197658517816}
-  - component: {fileID: -7537459182821773807}
   m_Layer: 1
   m_Name: Player
   m_TagString: Untagged
@@ -78,10 +77,9 @@ SpriteRenderer:
   m_SortingLayerID: 866222301
   m_SortingLayer: 5
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1167552266851011437, guid: 3d1659cc9f3061040a673b35f5b3aeff,
-    type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1031380d0febb344ba2d5f9d45e1b21e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 1
+  m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 0.64, y: 1.28}
@@ -128,7 +126,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.28, y: 2.56875}
+    oldSize: {x: 0.64, y: 1.28}
     newSize: {x: 0.64, y: 1.28}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -156,10 +154,6 @@ MonoBehaviour:
   chargeSound2: {fileID: 0}
   eatSound: {fileID: 8300000, guid: b3dbdc778532cca4aa4da4317bed7afe, type: 3}
   waterSound: {fileID: 8300000, guid: 54cf67ab18252544bb4946ee5c352dee, type: 3}
-  player1motion: {fileID: 9100000, guid: b5c8e6493e79ed64caebb8907eb0a277, type: 2}
-  player2motion: {fileID: 9100000, guid: 322e1b2809f83cd4f803bd55abba4ce8, type: 2}
-  player3motion: {fileID: 9100000, guid: e120d79a1d7667d4690794d9e0dd8276, type: 2}
-  player4motion: {fileID: 9100000, guid: 278807bf07410554c9df8906c22b9a21, type: 2}
 --- !u!114 &977973506313672036
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -308,22 +302,3 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!95 &-7537459182821773807
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2593015445476209664}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: b5c8e6493e79ed64caebb8907eb0a277, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0

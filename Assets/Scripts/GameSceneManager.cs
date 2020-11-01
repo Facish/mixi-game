@@ -12,7 +12,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     public bool gameStart = false;
     public float gameTimer = 5;
     public float GameTime = 5;
-    private Animator anim;
+
 
     public int playerId;
     private List<GameObject> leaves = new List<GameObject>();
