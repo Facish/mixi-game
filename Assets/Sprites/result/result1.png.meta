@@ -1,10 +1,14 @@
 fileFormatVersion: 2
 guid: be1115e4c4712084e9d82427093dba69
 TextureImporter:
+<<<<<<< HEAD
   internalIDToNameTable:
   - first:
       213: 5849862309323188439
     second: result1_0
+=======
+  internalIDToNameTable: []
+>>>>>>> Facish2
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
