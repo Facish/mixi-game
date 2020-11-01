@@ -19,6 +19,7 @@ public class ResultSceneManager : MonoBehaviour
     public GameObject resultText = default;
     private SpriteRenderer resultTextSprite;
 
+    public GameObject[] destroy;
     private int maxFruit = -1;
     private int winPlayer = -1;
 
@@ -37,18 +38,17 @@ public class ResultSceneManager : MonoBehaviour
         player2.gameObject.SetActive(false);
         player3.gameObject.SetActive(false);
         player4.gameObject.SetActive(false);
+
+        destroy = GameObject.FindGameObjectsWithTag("Finish");
+        Destroy(destroy[1]);
+        //Destroy(destroy[2]);
     }
 
     // Update is called once per frame
     void Update()
     {
         if (result && receiveVariable) {
-            if (!winner) {
-                //text = "no winner!";
-                resultTextSprite.sprite = resultText.GetComponent<ResultText>().NoWinner;
-                Debug.Log("no win");
-            }
-            else {
+            if(winner) {
                 int maxFruit = -1; 
                 int winPlayer = -1;
                 for (int i = 0; i < 4; i++) {
@@ -104,6 +104,13 @@ public class ResultSceneManager : MonoBehaviour
                     Debug.Log("draw");
                 }
             }
+            else {
+                //text = "no winner!";
+                resultTextSprite.sprite = resultText.GetComponent<ResultText>().NoWinner;
+                resultTextSprite.transform.position = new Vector3(0, 0, 0);
+                Debug.Log("no win");
+                result = false;
+            }
             
             result = false;
         }
@@ -114,14 +121,24 @@ public class ResultSceneManager : MonoBehaviour
             // エディタから実行
             if (Input.GetMouseButtonDown(0)) {
                 // シーン切り替え
+                foreach(GameObject obj in destroy) {
+                    Destroy(obj);
+                }
+
                 SceneManager.LoadScene("TitleScene");
+                
             }
         }
         else {
             // 実機で実行
             if (Input.GetMouseButtonDown(0)) {
                 // シーン切り替え
+                foreach(GameObject obj in destroy) {
+                    Destroy(obj);
+                }
+                
                 SceneManager.LoadScene("TitleScene");
+                
             }
 
             if (Input.touchCount > 0) {
@@ -129,6 +146,7 @@ public class ResultSceneManager : MonoBehaviour
                 if (touch.phase == TouchPhase.Began) {
                     // シーン切り替え
                     SceneManager.LoadScene("TitleScene");
+                    resultText.gameObject.SetActive(false);
                 }
             }
         }
