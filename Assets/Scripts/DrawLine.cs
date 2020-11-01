@@ -105,7 +105,7 @@ public class DrawLine : MonoBehaviour
             lineRenderers[i].endWidth = arcWidth;
             lineRenderers[i].numCapVertices = 5;
             lineRenderers[i].enabled = false;
-            lineRenderers[i].GetComponent<Renderer>().sortingLayerName = "UI";
+            lineRenderers[i].GetComponent<Renderer>().sortingLayerName = "Branches";
         }
     } 
 

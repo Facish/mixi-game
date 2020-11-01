@@ -234,24 +234,23 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 
     public void GrowLeafbyCan(GameObject wateringCan) {
         if (playerId == 1){
-            //photonView.RPC(nameof(RPCGrowLeafbyCan), RpcTarget.AllViaServer, wateringCans.IndexOf(wateringCan));
-            foreach(GameObject leaf in leaves) {
-                var script = leaf.GetComponent<Leaf>();
-                script.GrowbyWater();
-            }
+            photonView.RPC(nameof(RPCGrowLeafbyCan), RpcTarget.AllViaServer, wateringCans.IndexOf(wateringCan));
             wateringCans.Remove(wateringCan);
             //PhotonNetwork.Destory(wateringCan);
             UnoccupiedPosition(wateringCan.transform.position);
             wateringCan.GetComponent<WateringCan>().DestroyWateringCan();
         }
     }
-/*    [PunRPC]
+    [PunRPC]
     private void RPCGrowLeafbyCan(int index) {
-        
+        foreach(GameObject leaf in leaves) {
+            var script = leaf.GetComponent<Leaf>();
+            script.GrowbyWater();
+        }
         /*var can = wateringCans[index];
         wateringCans.RemoveAt(index);
         can.SetActive(false);*/
-//    }
+    }
 
     // プレイヤーの生存フラグON
     [PunRPC]

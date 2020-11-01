@@ -7,12 +7,10 @@ public class TitleSceneManager : MonoBehaviour
 {
     public string color = "red";
 
-
-
     // Start is called before the first frame update
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -22,7 +20,8 @@ public class TitleSceneManager : MonoBehaviour
             // エディタから実行
             if (Input.GetMouseButtonDown(0)) {
                 // イベントに登録
-                //SceneManager.sceneLoaded += MatchSceneLoaded;
+                SceneManager.sceneLoaded += MatchSceneLoaded;
+
                 // シーン切り替え
                 SceneManager.LoadScene("MatchScene");
             }
@@ -31,7 +30,8 @@ public class TitleSceneManager : MonoBehaviour
             // 実機で実行
             if (Input.GetMouseButtonDown(0)) {
                 // イベントに登録
-                //SceneManager.sceneLoaded += MatchSceneLoaded;
+                SceneManager.sceneLoaded += MatchSceneLoaded;
+
                 // シーン切り替え
                 SceneManager.LoadScene("MatchScene");
             }
@@ -40,7 +40,8 @@ public class TitleSceneManager : MonoBehaviour
                 Touch touch = Input.GetTouch(0);
                  if (touch.phase == TouchPhase.Began) {
                      // イベントに登録
-                    //SceneManager.sceneLoaded += MatchSceneLoaded;
+                    SceneManager.sceneLoaded += MatchSceneLoaded;
+
                     // シーン切り替え
                     SceneManager.LoadScene("MatchScene");
                  }

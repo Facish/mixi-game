@@ -1,5 +1,4 @@
 fileFormatVersion: 2
-<<<<<<< HEAD
 guid: ece8e70b25f62aa46b949da5562b3ee6
 TextureImporter:
   internalIDToNameTable:
@@ -93,11 +92,6 @@ TextureImporter:
   - first:
       213: -7307806682197820658
     second: spriteSheet3-2_29
-=======
-guid: eda12ed89f4233243926fc520ed151eb
-TextureImporter:
-  internalIDToNameTable: []
->>>>>>> origin/Facish3
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -136,11 +130,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-<<<<<<< HEAD
   spriteMode: 2
-=======
-  spriteMode: 1
->>>>>>> origin/Facish3
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -171,7 +161,6 @@ TextureImporter:
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-<<<<<<< HEAD
   - serializedVersion: 3
     buildTarget: Standalone
     maxTextureSize: 2048
@@ -817,11 +806,6 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
-=======
-  spriteSheet:
-    serializedVersion: 2
-    sprites: []
->>>>>>> origin/Facish3
     outline: []
     physicsShape: []
     bones: []
