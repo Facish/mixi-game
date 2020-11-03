@@ -31,6 +31,12 @@ public class GamePlayer : MonoBehaviourPunCallbacks
     public AudioClip chargeSound2;
     public AudioClip eatSound;
     public AudioClip waterSound;
+    public RuntimeAnimatorController player1motion;
+    public RuntimeAnimatorController player2motion;
+    public RuntimeAnimatorController player3motion;
+    public RuntimeAnimatorController player4motion;
+
+    private Animator anim;
 
     // Start is called before the first frame update
     void Start()
@@ -40,6 +46,25 @@ public class GamePlayer : MonoBehaviourPunCallbacks
         sceneManager = GameObject.Find("GameSceneManager");
         gameSceneManager = sceneManager.GetComponent<GameSceneManager>();
         drawLineSprite = this.GetComponent<DrawLine>();
+
+
+        anim = GetComponent<Animator>();
+        if (photonView.ViewID <= 2000)
+        {
+            anim.runtimeAnimatorController = player1motion;
+        }
+        else if (photonView.ViewID <= 3000)
+        {
+            anim.runtimeAnimatorController = player2motion;
+        }
+        else if (photonView.ViewID <= 4000)
+        {
+            anim.runtimeAnimatorController = player3motion;
+        }
+        else
+        {
+            anim.runtimeAnimatorController = player4motion;
+        }
     }
 
     // Update is called once per frame
@@ -67,6 +92,7 @@ public class GamePlayer : MonoBehaviourPunCallbacks
         if (other.gameObject.tag == "Leaf") {
             // 葉の上か確認
             isGround = true;
+            anim.SetBool("isGround", true);
         }
     }
     private void OnCollisionExit2D(Collision2D other) {
@@ -113,6 +139,7 @@ public class GamePlayer : MonoBehaviourPunCallbacks
                 // ジャンプ
                 photonView.RPC(nameof(RPCPlayerMove), RpcTarget.All, jumpPower, jumpDirection);
                 isGround = false;
+                anim.SetBool("isGround", false);
                 drawLineSprite.LineDrawOff();
 
                 if (jumpPower > 5) {
@@ -169,6 +196,7 @@ public class GamePlayer : MonoBehaviourPunCallbacks
                     // ジャンプ
                     photonView.RPC(nameof(RPCPlayerMove), RpcTarget.All, jumpPower, jumpDirection);
                     isGround = false;
+                    anim.SetBool("isGround", false);
                     drawLineSprite.LineDrawOff();
 
                     if (jumpPower > 5) {

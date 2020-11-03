@@ -251,7 +251,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: red
-  winner: 0
+  winner: 1
   fruit: 00000000000000000000000000000000
   receiveVariable: 0
   resultText: {fileID: 1517578129}
@@ -1176,7 +1176,7 @@ SpriteRenderer:
   m_SortingLayerID: 11926159
   m_SortingLayer: 7
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a71a71f3cd603eb489afd19cc1456b48, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1d8ccf5365f1b284191f80504ba50867, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

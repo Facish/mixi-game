@@ -47,26 +47,33 @@ public class ResultSceneManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (result && receiveVariable) {
-            if(winner) {
-                int maxFruit = -1; 
+        if (result && receiveVariable)
+        {
+            if (winner)
+            {
+                int maxFruit = -1;
                 int winPlayer = -1;
-                for (int i = 0; i < 4; i++) {
-                    if (maxFruit < fruit[i]) {
+                for (int i = 0; i < 4; i++)
+                {
+                    if (maxFruit < fruit[i])
+                    {
                         maxFruit = fruit[i];
                         winPlayer = i;
                         draw = false;
                     }
-                    else if (maxFruit == fruit[i]) {
+                    else if (maxFruit == fruit[i])
+                    {
                         draw = true;
                     }
                 }
                 Debug.Log(maxFruit);
 
-                if (!draw) {
+                if (!draw)
+                {
                     //text = "player" + winPlayer.ToString() + "win!";
-                    switch(winPlayer) {
-                        case 0: 
+                    switch (winPlayer)
+                    {
+                        case 0:
                             {
                                 resultTextSprite.sprite = resultText.GetComponent<ResultText>().Player1Win;
                                 player1.gameObject.SetActive(true);
@@ -95,55 +102,65 @@ public class ResultSceneManager : MonoBehaviour
                             }
                             break;
                     }
-                    
+
                     Debug.Log("player" + winPlayer.ToString() + "win");
                 }
-                else {
+                else
+                {
                     //text = "draw!";
                     resultTextSprite.sprite = resultText.GetComponent<ResultText>().Draw;
                     Debug.Log("draw");
                 }
             }
-            else {
+            else
+            {
                 //text = "no winner!";
                 resultTextSprite.sprite = resultText.GetComponent<ResultText>().NoWinner;
                 resultTextSprite.transform.position = new Vector3(0, 0, 0);
                 Debug.Log("no win");
                 result = false;
             }
-            
+
             result = false;
         }
 
         //resultText.text = text;
 
-        if (Application.isEditor) {
+        if (Application.isEditor)
+        {
             // エディタから実行
-            if (Input.GetMouseButtonDown(0)) {
+            if (Input.GetMouseButtonDown(0))
+            {
                 // シーン切り替え
-                foreach(GameObject obj in destroy) {
+                foreach (GameObject obj in destroy)
+                {
                     Destroy(obj);
                 }
 
                 SceneManager.LoadScene("TitleScene");
-                
+
             }
         }
-        else {
+        else
+        {
             // 実機で実行
-            if (Input.GetMouseButtonDown(0)) {
+            if (Input.GetMouseButtonDown(0))
+            {
                 // シーン切り替え
-                foreach(GameObject obj in destroy) {
+                foreach (GameObject obj in destroy)
+                {
                     Destroy(obj);
                 }
-                
+
                 SceneManager.LoadScene("TitleScene");
-                
+
             }
 
-            if (Input.touchCount > 0) {
+            if (Input.touchCount > 0)
+            {
                 Touch touch = Input.GetTouch(0);
-                if (touch.phase == TouchPhase.Began) {
+                if (touch.phase == TouchPhase.Began)
+                {
                     // シーン切り替え
                     SceneManager.LoadScene("TitleScene");
                     resultText.gameObject.SetActive(false);

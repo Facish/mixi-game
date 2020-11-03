@@ -15,6 +15,7 @@ public class ResultText : MonoBehaviour
     void Start()
     {
         DontDestroyOnLoad(this);
+
     }
 
     // Update is called once per frame

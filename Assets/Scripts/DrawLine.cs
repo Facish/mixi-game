@@ -85,18 +85,13 @@ public class DrawLine : MonoBehaviour
     {
         // 親オブジェクトを作り、LineRendererを持つ子オブジェクトを作る
         GameObject arcObjectsParent = new GameObject("ArcObject");
-        //arcObjectsParent.GetComponent<Renderer>().sortingLayerName = "Player";
-        //arcObjectsParent.GetComponent<Renderer>().sortingOrder = 0;
 
         lineRenderers = new LineRenderer[segmentCount];
         for (int i = 0; i < segmentCount; i++)
         {
             GameObject newObject = new GameObject("LineRenderer_" + i);
-            //newObject.GetComponent<Renderer>().sortingLayerName = "Player";
-            //newObject.GetComponent<Renderer>().sortingOrder = 0;
             newObject.transform.SetParent(arcObjectsParent.transform);
             lineRenderers[i] = newObject.AddComponent<LineRenderer>();
-            
 
             // 光源関連を使用しない
             lineRenderers[i].receiveShadows = false;
@@ -110,8 +105,7 @@ public class DrawLine : MonoBehaviour
             lineRenderers[i].endWidth = arcWidth;
             lineRenderers[i].numCapVertices = 5;
             lineRenderers[i].enabled = false;
-            //lineRenderers[i].GetComponent<Renderer>().sortingLayerName = "Player";
-            //lineRenderers[i].GetComponent<Renderer>().sortingOrder = 0;
+            lineRenderers[i].GetComponent<Renderer>().sortingLayerName = "UI";
         }
     } 
 
